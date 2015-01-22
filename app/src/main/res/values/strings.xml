@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Password Protector</string>
+    <string name="hello_password_protector">Welcome to Password Protector!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_next">NextActivity</string>
+    <string name="create">Create Password Data</string>
+
+    <color name="grey">#3bcacaca</color>
+
+    <string name="info">So how does this work?\nThe first time you activate this application, you will be
+        prompted to input your email address (not so private) AND you will be asked to create a private
+        security question AND answer.  It is up to you to decide what that question is, and what the answer is.
+        Both the question and answer are case-insensitive, so don\'t worry about caps.
+        However it IS sensitive to numbers, punctuation and special characters.  Note that spaces are ignored.
+        \nI could just throw the usual security questions at you, but with social media being what it is,
+        that info can be hacked by the bad guys.  However if you are required to come up with the question AND answer, it
+        is next to impossible for the bad guys to guess both.\nYour email address, and the results of your Q&amp;A are encrypted (AES128) and stored on your phone,
+        so you will not be asked for this info again UNLESS you: delete the app from your phone; delete the stored data;
+        buy a new phone and download this app again.  At that point you MUST enter the same email (not so hard) AND the
+        EXACT same question and answer.  I am asking you to remember that much.  If you forget that EXACT question and answer,
+        your data is forever encrypted.  I cannot help you, the NSA cannot help you, even the script kiddie in Eastern Bulgaria
+        cannot help you.  If I get granted unlimited access to the newest quantum computers, I might be able to recover your data, but don\'t count on it.\n\n</string>
+    <string name="title_activity_read_password">ReadPasswordActivity</string>
+    <string name="title_activity_create">CreateActivity</string>
+    <string name="title_activity_read">ReadActivity</string>
+    <string name="hello_world">Hello world!</string>
+
+</resources>
