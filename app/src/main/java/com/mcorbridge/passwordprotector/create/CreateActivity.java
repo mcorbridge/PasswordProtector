@@ -13,13 +13,16 @@ import android.widget.EditText;
 import com.mcorbridge.passwordprotector.JSON.JsonTask;
 import com.mcorbridge.passwordprotector.PasswordDataActivity;
 import com.mcorbridge.passwordprotector.R;
+import com.mcorbridge.passwordprotector.encryption.AESEncryption;
 import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.service.ServletPostAsyncTask;
+import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
 
 public class CreateActivity extends Activity implements IPasswordActivity{
 
     ApplicationModel applicationModel;
+    private PasswordsDataSource passwordsDataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,9 @@ public class CreateActivity extends Activity implements IPasswordActivity{
         setContentView(R.layout.activity_create);
 
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+
+        // for offline data work
+        passwordsDataSource = new PasswordsDataSource(getApplicationContext());
 
         applicationModel = ApplicationModel.getInstance();
     }
@@ -71,16 +77,25 @@ public class CreateActivity extends Activity implements IPasswordActivity{
 
         if(applicationModel.getIsDataConnected()){
             postToServlet(jsonRequest);
+            saveToLocalDatabase(category,title,value,false); // save to cloud and local db simultaneously
         }else{
-            saveToLocal(jsonRequest);
+            saveToLocalDatabase(category,title,value,true); // 'true' flags this as not synchronized with the cloud
         }
 
         Intent intent = new Intent(this, PasswordDataActivity.class);
         startActivity(intent);
     }
 
-    private void saveToLocal(String jsonRequest){
-        //TODO save to local sqLite db
+    private void saveToLocalDatabase(String category, String title, String value, boolean modified)throws Exception{
+        passwordsDataSource.open();
+        String cipher = applicationModel.getCipher();
+        String action = AESEncryption.cipher(cipher, "create");
+        category = AESEncryption.cipher(cipher,category);
+        title = AESEncryption.cipher(cipher,title);
+        value = AESEncryption.cipher(cipher,value);
+        String name = applicationModel.getEmail();
+        passwordsDataSource.createPassword(action,category,modified,name,title,value);
+        passwordsDataSource.close();
     }
 
     private void postToServlet(String jsonRequest) throws  Exception{

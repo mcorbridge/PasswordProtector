@@ -21,6 +21,8 @@ import com.mcorbridge.passwordprotector.encryption.AESEncryption;
 import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.service.ServletPostAsyncTask;
+import com.mcorbridge.passwordprotector.sql.Password;
+import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
 import com.mcorbridge.passwordprotector.update.UpdateActivity;
 import com.mcorbridge.passwordprotector.vo.PasswordDataVO;
 
@@ -32,6 +34,7 @@ public class ReadActivity extends Activity implements IPasswordActivity{
 
     private ApplicationModel applicationModel;
     private ProgressBar progressBar;
+    private PasswordsDataSource passwordsDataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +45,16 @@ public class ReadActivity extends Activity implements IPasswordActivity{
 
         applicationModel = ApplicationModel.getInstance();
 
+        // for offline data work
+        passwordsDataSource = new PasswordsDataSource(getApplicationContext());
+        progressBar = (ProgressBar)findViewById(R.id.loadSpinner);
+        progressBar.setVisibility(View.VISIBLE);
+
         try {
             doRead();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        progressBar = (ProgressBar)findViewById(R.id.loadSpinner);
-        progressBar.setVisibility(View.VISIBLE);
     }
 
 
@@ -80,7 +85,7 @@ public class ReadActivity extends Activity implements IPasswordActivity{
         if(applicationModel.getIsDataConnected()){
             postToServlet(jsonRequest);
         }else{
-            readFromLocal(jsonRequest);
+            readFromLocalDatabase();
         }
     }
 
@@ -88,34 +93,53 @@ public class ReadActivity extends Activity implements IPasswordActivity{
         new ServletPostAsyncTask().execute(new Pair<Context, String>(this, jsonRequest));
     }
 
-    private void readFromLocal(String jsonRequest){
-        //TODO read to local sqLite db
+    private void readFromLocalDatabase(){
+        progressBar.setVisibility(View.INVISIBLE);
+        passwordsDataSource.open();
+        List<Password> passwords = passwordsDataSource.getAllPasswords();
+        passwordsDataSource.close();
+        PasswordDataVO[] passwordDataVOs = arrayFromQuery(passwords);
+        ArrayList<PasswordDataVO> decipheredPasswordDataVOs = doDecipherResult(passwordDataVOs);
+        //testDecipheredPasswordDataVOs(decipheredPasswordDataVOs);
+        bindPasswordDataToList(decipheredPasswordDataVOs);
+    }
+
+    private PasswordDataVO[] arrayFromQuery(List<Password> passwords){
+        PasswordDataVO[] passwordDataVOs = new PasswordDataVO[passwords.size()];
+        Iterator iterator = passwords.iterator();
+        int n = 0;
+        while(iterator.hasNext()){
+            PasswordDataVO passwordDataVO = new PasswordDataVO();
+            Password password = (Password)iterator.next();
+            passwordDataVO.setCategory(password.getCategory());
+            passwordDataVO.setName(password.getName());
+            passwordDataVO.setTitle(password.getTitle());
+            passwordDataVO.setAction(password.getAction());
+            passwordDataVO.setValue(password.getValue());
+            passwordDataVOs[n] = passwordDataVO;
+            n++;
+        }
+        return passwordDataVOs;
     }
 
     public void processResults(String results){
-
         progressBar.setVisibility(View.INVISIBLE);
-
         Gson gson = new Gson();
         PasswordDataVO[] passwordDataVOs = gson.fromJson(results, PasswordDataVO[].class);
-
         // decrypt the password data
         ArrayList<PasswordDataVO> decipheredPasswordDataVOs = doDecipherResult(passwordDataVOs);
-
+        bindPasswordDataToList(decipheredPasswordDataVOs);
         //testDecipheredPasswordDataVOs(decipheredPasswordDataVOs);
+    }
 
+    private void bindPasswordDataToList(ArrayList<PasswordDataVO> decipheredPasswordDataVOs){
         //bind results to listView
         ArrayAdapter<PasswordDataVO> itemsAdapter = new ArrayAdapter<PasswordDataVO>(this, android.R.layout.simple_list_item_1, decipheredPasswordDataVOs);
-
         ListView listView = (ListView) findViewById(R.id.passwordList);
         listView.setAdapter(itemsAdapter);
-
         final CustomAdapter adapter = new CustomAdapter(this, decipheredPasswordDataVOs);
-
         listView.setAdapter(adapter);
-
         final Intent intent = new Intent(this, UpdateActivity.class);
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View itemClicked, int position, long id) {

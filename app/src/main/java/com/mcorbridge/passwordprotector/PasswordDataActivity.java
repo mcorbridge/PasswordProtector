@@ -133,10 +133,12 @@ public class PasswordDataActivity extends Activity{
                     .setIcon(R.drawable.alert_icon)
                     .setPositiveButton("Ok, got it", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            startActivity(intent);
+                            //startActivity(intent);
                         }
                     })
                     .show();
+        }else{
+            // TODO look for any modifications in the local db and synchronize with cloud
         }
     }
 

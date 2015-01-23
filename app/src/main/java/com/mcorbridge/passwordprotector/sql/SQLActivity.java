@@ -7,15 +7,15 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mcorbridge.passwordprotector.R;
+import com.mcorbridge.passwordprotector.encryption.AESEncryption;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
 
-import java.util.Date;
 import java.util.List;
 
 public class SQLActivity extends Activity {
 
     ApplicationModel applicationModel;
-    CommentsDataSource commentsDataSource;
+    PasswordsDataSource passwordsDataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public class SQLActivity extends Activity {
 
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
 
-        commentsDataSource = new CommentsDataSource(getApplicationContext());
+        passwordsDataSource = new PasswordsDataSource(getApplicationContext());
     }
 
 
@@ -52,20 +52,23 @@ public class SQLActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void doCreate(View v){
-        commentsDataSource.open();
-        commentsDataSource.createComment("foo " + getDate());
-        commentsDataSource.close();
+    public void doCreate(View v)throws Exception{
+        passwordsDataSource.open();
+        String cipher = applicationModel.getCipher();
+        String action = AESEncryption.cipher(cipher,"test");
+        String category = AESEncryption.cipher(cipher,"personal");
+        boolean modified = true;
+        String title = AESEncryption.cipher(cipher,"test");
+        String value = AESEncryption.cipher(cipher,"test");
+        String name = applicationModel.getEmail();
+        passwordsDataSource.createPassword(action,category,modified,name,title,value);
+        passwordsDataSource.close();
     }
 
     public void doRead(View v){
-        commentsDataSource.open();
-        List<Comment> comments = commentsDataSource.getAllComments();
-        commentsDataSource.close();
+        passwordsDataSource.open();
+        List<Password> passwords = passwordsDataSource.getAllPasswords();
+        passwordsDataSource.close();
     }
 
-    private String getDate(){
-        Date date = new Date();
-        return date.toString();
-    }
 }
