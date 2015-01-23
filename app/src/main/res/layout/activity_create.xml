@@ -8,45 +8,78 @@
 
     <TextView android:text="@string/create" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:hint="category" />
+        android:id="@+id/textView" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/editTextCategory"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="62dp"
-        android:layout_marginTop="71dp"
-        android:hint="category" />
+   <LinearLayout
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:paddingLeft="16dp"
+       android:paddingRight="16dp"
+       android:orientation="vertical"
+       android:layout_alignParentStart="true"
+       android:layout_marginTop="30dp">
+       <TextView android:text="Category"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:id="@+id/textViewCategory"/>
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:id="@+id/editTextCategory"
+            android:background="@drawable/textborder"
+            android:text="personal"/>
+    </LinearLayout>
 
-    <EditText
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editTextTitle"
-        android:layout_below="@+id/editTextCategory"
-        android:layout_alignStart="@+id/editTextCategory"
-        android:layout_marginTop="41dp"
-        android:hint="name" />
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:orientation="vertical"
+        android:layout_marginTop="110dp">
+        <TextView android:text="Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewTitle" />
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:id="@+id/editTextTitle"
+            android:background="@drawable/textborder" />
+    </LinearLayout>
 
-    <EditText
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editTextValue"
-        android:layout_below="@+id/editTextTitle"
-        android:layout_alignStart="@+id/editTextTitle"
-        android:layout_marginTop="60dp"
-        android:hint="value" />
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:orientation="vertical"
+        android:layout_marginTop="200dp"
+        android:id="@+id/linearLayout">
+        <TextView android:text="Value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewValue" />
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
+            android:padding="10dp"
+            android:gravity="top"
+            android:id="@+id/editTextValue"
+            android:lines="10"
+            android:background="@drawable/textborder"
+            android:maxLines="10" />
+    </LinearLayout>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="submit"
         android:id="@+id/button4"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="33dp"
-        android:onClick="doSubmit"/>
+        android:onClick="doSubmit"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

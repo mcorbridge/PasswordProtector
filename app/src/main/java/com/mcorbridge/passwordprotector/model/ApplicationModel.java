@@ -23,10 +23,11 @@ public class ApplicationModel {
         return SingletonHolder.INSTANCE;
     }
 
-
+    // ----------------------------------------------------------
 
     public static final String APPLICATION_SECRET_KEY = "bostonBruins";
 
+    // ----------------------------------------------------------
 
     private String visualCipherKey;
 
@@ -85,4 +86,6 @@ public class ApplicationModel {
     public void setIsDataConnected(boolean isDataConnected) {
         this.isDataConnected = isDataConnected;
     }
+
+    // ----------------------------------------------------------
 }

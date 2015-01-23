@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.mcorbridge.passwordprotector.create.CreateActivity;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
@@ -24,9 +23,6 @@ public class PasswordDataActivity extends Activity{
 
 
     private ApplicationModel applicationModel;
-    private String currentActivity;
-
-    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +33,8 @@ public class PasswordDataActivity extends Activity{
 
         applicationModel = ApplicationModel.getInstance();
 
-        TextView textView = (TextView)findViewById(R.id.textViewTitle);
-        textView.setText(applicationModel.getEmail() + "\n\n" + applicationModel.getCipher());
-
-        context = getApplicationContext();
+        //TextView textView = (TextView)findViewById(R.id.textViewTitle);
+        //textView.setText(applicationModel.getEmail() + "\n\n" + applicationModel.getCipher());
 
         //offline-online mode check for wifi and/or data over telecom
         checkCommunications();
@@ -79,7 +73,6 @@ public class PasswordDataActivity extends Activity{
      * post json strings to servlet
      */
     public void doCreate(View v){
-        currentActivity = "create";
         Intent intent = new Intent(this, CreateActivity.class);
         startActivity(intent);
     }
@@ -88,7 +81,6 @@ public class PasswordDataActivity extends Activity{
      *
      */
     public void doRead(View v){
-        currentActivity = "read";
         Intent intent = new Intent(this, ReadActivity.class);
         startActivity(intent);
     }
@@ -97,7 +89,6 @@ public class PasswordDataActivity extends Activity{
      *
      */
     public void doUpdate(View v){
-        currentActivity = "update";
         //Intent intent = new Intent(this, UpdateActivity.class);
         //startActivity(intent);
     }
@@ -106,11 +97,14 @@ public class PasswordDataActivity extends Activity{
      *
      */
     public void doDelete(View v){
-        currentActivity = "delete";
         //Intent intent = new Intent(this, DeleteActivity.class);
         //startActivity(intent);
     }
 
+    /**
+     * application can run in an offline mode IF there is no mobile data communications (wifi or mobile data)
+     * of course, I will need to add all the sql to handle this (yuk!)
+     */
     public void checkCommunications(){
         applicationModel.setIsDataConnected(true);
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -133,7 +127,7 @@ public class PasswordDataActivity extends Activity{
             applicationModel.setIsDataConnected(false);
             new AlertDialog.Builder(this)
                     .setTitle("Alert")
-                    .setMessage("You do not have a data connection.\nThe application will continue in offline mode.\nAll offline changes will be synchronized with the cloud data.")
+                    .setMessage("You do not have a data connection.\nThe application will continue in offline mode.\nAll offline changes will be synchronized with the cloud when you next connect.")
                     .setIcon(R.drawable.alert_icon)
                     .setPositiveButton("Ok, got it", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {

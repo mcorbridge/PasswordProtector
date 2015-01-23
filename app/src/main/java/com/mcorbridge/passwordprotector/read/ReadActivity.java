@@ -2,18 +2,26 @@ package com.mcorbridge.passwordprotector.read;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.mcorbridge.passwordprotector.JSON.JsonTask;
 import com.mcorbridge.passwordprotector.R;
+import com.mcorbridge.passwordprotector.adapters.CustomAdapter;
 import com.mcorbridge.passwordprotector.encryption.AESEncryption;
 import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.service.ServletPostAsyncTask;
+import com.mcorbridge.passwordprotector.update.UpdateActivity;
 import com.mcorbridge.passwordprotector.vo.PasswordDataVO;
 
 import java.util.ArrayList;
@@ -23,11 +31,14 @@ import java.util.List;
 public class ReadActivity extends Activity implements IPasswordActivity{
 
     private ApplicationModel applicationModel;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read);
+
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
 
         applicationModel = ApplicationModel.getInstance();
 
@@ -36,6 +47,9 @@ public class ReadActivity extends Activity implements IPasswordActivity{
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        progressBar = (ProgressBar)findViewById(R.id.loadSpinner);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
 
@@ -71,17 +85,42 @@ public class ReadActivity extends Activity implements IPasswordActivity{
     }
 
     public void processResults(String results){
+
+        progressBar.setVisibility(View.INVISIBLE);
+
         Gson gson = new Gson();
         PasswordDataVO[] passwordDataVOs = gson.fromJson(results, PasswordDataVO[].class);
 
         // decrypt the password data
-        List<PasswordDataVO> decipheredPasswordDataVOs = doDecipherResult(passwordDataVOs);
+        ArrayList<PasswordDataVO> decipheredPasswordDataVOs = doDecipherResult(passwordDataVOs);
 
-        testDecipheredPasswordDataVOs(decipheredPasswordDataVOs);
+        //testDecipheredPasswordDataVOs(decipheredPasswordDataVOs);
+
+        //bind results to listView
+        ArrayAdapter<PasswordDataVO> itemsAdapter = new ArrayAdapter<PasswordDataVO>(this, android.R.layout.simple_list_item_1, decipheredPasswordDataVOs);
+
+        ListView listView = (ListView) findViewById(R.id.passwordList);
+        listView.setAdapter(itemsAdapter);
+
+        final CustomAdapter adapter = new CustomAdapter(this, decipheredPasswordDataVOs);
+
+        listView.setAdapter(adapter);
+
+        final Intent intent = new Intent(this, UpdateActivity.class);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View itemClicked, int position, long id) {
+                CustomAdapter customAdapter = (CustomAdapter)parent.getAdapter();
+                PasswordDataVO passwordDataVO = customAdapter.getItem(position);
+                intent.putExtra("passwordDataVO",passwordDataVO);
+                startActivity(intent);
+            }
+        });
     }
 
-    private List<PasswordDataVO> doDecipherResult(PasswordDataVO[] passwordDataVOs){
-        List<PasswordDataVO> decipheredPasswordDataVOs = new ArrayList<>();
+    private ArrayList<PasswordDataVO> doDecipherResult(PasswordDataVO[] passwordDataVOs){
+        ArrayList<PasswordDataVO> decipheredPasswordDataVOs = new ArrayList<>();
         try {
             for(int n=0; n<passwordDataVOs.length; n++){
                 PasswordDataVO passwordDataVO = passwordDataVOs[n];
@@ -104,10 +143,10 @@ public class ReadActivity extends Activity implements IPasswordActivity{
             PasswordDataVO passwordDataVO = iterator.next();
             System.out.println(
                     "(id) " + passwordDataVO.getId() + newLine +
-                            "(name) " + passwordDataVO.getName() + newLine +
-                            "(category) " + passwordDataVO.getCategory() + newLine +
-                            "(title) " + passwordDataVO.getTitle() + newLine +
-                            "(value) " + passwordDataVO.getValue()
+                    "(name) " + passwordDataVO.getName() + newLine +
+                    "(category) " + passwordDataVO.getCategory() + newLine +
+                    "(title) " + passwordDataVO.getTitle() + newLine +
+                    "(value) " + passwordDataVO.getValue()
             );
         }
     }

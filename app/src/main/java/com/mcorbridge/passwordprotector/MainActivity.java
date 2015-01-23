@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-                if(progress < 10){
+                if(progress < 30){
                     doNext();
                 }
             }

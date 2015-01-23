@@ -1,11 +1,13 @@
 package com.mcorbridge.passwordprotector.vo;
 
+import java.io.Serializable;
+
 /**
  * Created by Mike on 12/29/2014.
  * copyright Michael D. Corbridge
  */
 
-public class PasswordDataVO
+public class PasswordDataVO implements Serializable
 {
 
 

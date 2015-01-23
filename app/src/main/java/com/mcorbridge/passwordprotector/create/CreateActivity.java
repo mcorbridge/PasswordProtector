@@ -14,14 +14,21 @@ import com.mcorbridge.passwordprotector.JSON.JsonTask;
 import com.mcorbridge.passwordprotector.PasswordDataActivity;
 import com.mcorbridge.passwordprotector.R;
 import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
+import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.service.ServletPostAsyncTask;
 
 public class CreateActivity extends Activity implements IPasswordActivity{
+
+    ApplicationModel applicationModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
+
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+
+        applicationModel = ApplicationModel.getInstance();
     }
 
 
@@ -62,10 +69,18 @@ public class CreateActivity extends Activity implements IPasswordActivity{
 
         String jsonRequest = JsonTask.createJSON(category,title,value);
 
-        postToServlet(jsonRequest);
+        if(applicationModel.getIsDataConnected()){
+            postToServlet(jsonRequest);
+        }else{
+            saveToLocal(jsonRequest);
+        }
 
         Intent intent = new Intent(this, PasswordDataActivity.class);
         startActivity(intent);
+    }
+
+    private void saveToLocal(String jsonRequest){
+        //TODO save to local sqLite db
     }
 
     private void postToServlet(String jsonRequest) throws  Exception{
