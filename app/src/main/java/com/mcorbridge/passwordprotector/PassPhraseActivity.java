@@ -21,11 +21,12 @@ import android.widget.PopupWindow;
 
 import com.mcorbridge.passwordprotector.encryption.AESEncryption;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
+import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+//TODO fix formatting on the passPhrase page
 public class PassPhraseActivity extends Activity {
 
     private CountDownTimer countDownTimer;
@@ -37,12 +38,17 @@ public class PassPhraseActivity extends Activity {
 
     ApplicationModel applicationModel = ApplicationModel.getInstance();
 
+    private PasswordsDataSource passwordsDataSource;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pass_phrase);
 
         pref = getApplicationContext().getSharedPreferences("PasswordProtector", MODE_PRIVATE);
+
+        // for offline data work
+        passwordsDataSource = new PasswordsDataSource(getApplicationContext());
     }
 
 
