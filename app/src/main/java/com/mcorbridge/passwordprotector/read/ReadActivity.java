@@ -77,11 +77,19 @@ public class ReadActivity extends Activity implements IPasswordActivity{
 
     private void doRead() throws Exception{
         String jsonRequest = JsonTask.readJSON();
-        postToServlet(jsonRequest);
+        if(applicationModel.getIsDataConnected()){
+            postToServlet(jsonRequest);
+        }else{
+            readFromLocal(jsonRequest);
+        }
     }
 
     private void postToServlet(String jsonRequest) throws  Exception{
         new ServletPostAsyncTask().execute(new Pair<Context, String>(this, jsonRequest));
+    }
+
+    private void readFromLocal(String jsonRequest){
+        //TODO read to local sqLite db
     }
 
     public void processResults(String results){

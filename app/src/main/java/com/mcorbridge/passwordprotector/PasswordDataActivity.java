@@ -15,6 +15,7 @@ import android.view.View;
 import com.mcorbridge.passwordprotector.create.CreateActivity;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.read.ReadActivity;
+import com.mcorbridge.passwordprotector.sql.SQLActivity;
 
 import java.lang.reflect.Method;
 
@@ -125,13 +126,14 @@ public class PasswordDataActivity extends Activity{
         // go to offline mode IF there is no data connection
         if(!netInfo.isConnected() && !mobileDataEnabled){
             applicationModel.setIsDataConnected(false);
+            final Intent intent = new Intent(this, SQLActivity.class);
             new AlertDialog.Builder(this)
                     .setTitle("Alert")
                     .setMessage("You do not have a data connection.\nThe application will continue in offline mode.\nAll offline changes will be synchronized with the cloud when you next connect.")
                     .setIcon(R.drawable.alert_icon)
                     .setPositiveButton("Ok, got it", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            // stub
+                            startActivity(intent);
                         }
                     })
                     .show();
