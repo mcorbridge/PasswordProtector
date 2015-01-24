@@ -29,9 +29,10 @@ import java.util.List;
 
 public class PasswordDataActivity extends Activity implements IPasswordActivity{
 
-
     private ApplicationModel applicationModel;
     private PasswordsDataSource passwordsDataSource;
+    private List<PasswordDataVO> passwordDataVOs;
+    Iterator pIterator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +46,8 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
         // for offline data work
         passwordsDataSource = new PasswordsDataSource(getApplicationContext());
 
-        //TextView textView = (TextView)findViewById(R.id.textViewTitle);
-        //textView.setText(applicationModel.getEmail() + "\n\n" + applicationModel.getCipher());
-
         //offline-online mode check for wifi and/or data over telecom
-        checkCommunications();
+        checkMobileDataConnectivity();
 
     }
 
@@ -117,7 +115,7 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
      * this application can run in an offline mode IF there is no mobile data communications (wifi or mobile data)
      * of course, I will need to add all the sql to handle this (yuk!)
      */
-    public void checkCommunications(){
+    public void checkMobileDataConnectivity(){
         applicationModel.setIsDataConnected(true);
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -151,9 +149,9 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
         }else{
             // look for any modified password data in the local db and synchronize with cloud
             List<Password> passwords = readFromLocalDatabase();
-            List<PasswordDataVO> passwordDataVOs = findModifiedPasswordDataVOs(passwords);
+            findModifiedPasswordDataVOs(passwords);
             // persist these local passwordDataVOs to the cloud
-            createCloudPasswordData(passwordDataVOs);
+            createCloudPasswordData();
         }
     }
 
@@ -164,12 +162,19 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
         return passwords;
     }
 
-    private List<PasswordDataVO> findModifiedPasswordDataVOs(List<Password> passwords){
+    /**
+     * Note that the 'password' data object is different from the 'PasswordDataVO'
+     * The 'password' is ONLY created in the offline mode, and contains a boolean 'modified' that indicates
+     * that this data must be synchronized with the cloud data when the app next goes online
+     * @param passwords
+     * @return
+     */
+    private void findModifiedPasswordDataVOs(List<Password> passwords){
         Iterator iterator = passwords.iterator();
-        List<PasswordDataVO> passwordDataVOs = new ArrayList<PasswordDataVO>();
+        passwordDataVOs = new ArrayList<PasswordDataVO>();
         while(iterator.hasNext()){
             Password password = (Password)iterator.next();
-            if(password.isModified()){
+            if(password.isModified()){ // this is the boolean 'modified' I was talking about
                 PasswordDataVO passwordDataVO = new PasswordDataVO();
                 passwordDataVO.setCategory(password.getCategory());
                 passwordDataVO.setName(password.getName());
@@ -179,19 +184,19 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
                 passwordDataVOs.add(passwordDataVO);
             }
         }
-        return passwordDataVOs;
+        pIterator = passwordDataVOs.iterator();
     }
 
-    private void createCloudPasswordData(List<PasswordDataVO> passwordDataVOs){
-        Iterator iterator = passwordDataVOs.iterator();
-        while (iterator.hasNext()){
-            PasswordDataVO passwordDataVO = (PasswordDataVO)iterator.next();
-            //todo not exactly sure how I accomplish this if there are multiple passwordData objects that were modified
-        }
+    private void createCloudPasswordData(){
+        PasswordDataVO passwordDataVO = (PasswordDataVO)pIterator.next();
+        // todo the standard postToServlet operation
+
 
     }
 
     public void processResults(String results){
-        System.out.println(results);
+        while(pIterator.hasNext()){
+            createCloudPasswordData();
+        }
     }
 }

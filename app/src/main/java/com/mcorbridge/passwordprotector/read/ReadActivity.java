@@ -129,6 +129,7 @@ public class ReadActivity extends Activity implements IPasswordActivity{
         // decrypt the password data
         ArrayList<PasswordDataVO> decipheredPasswordDataVOs = doDecipherResult(passwordDataVOs);
         bindPasswordDataToList(decipheredPasswordDataVOs);
+        findCloudModifiedPasswordVOs(decipheredPasswordDataVOs);
         //testDecipheredPasswordDataVOs(decipheredPasswordDataVOs);
     }
 
@@ -149,6 +150,18 @@ public class ReadActivity extends Activity implements IPasswordActivity{
                 startActivity(intent);
             }
         });
+    }
+
+    private void findCloudModifiedPasswordVOs(ArrayList<PasswordDataVO> decipheredPasswordDataVOs){
+        Iterator iterator = decipheredPasswordDataVOs.iterator();
+        while(iterator.hasNext()){
+            PasswordDataVO passwordDataVO = (PasswordDataVO)iterator.next();
+            if(passwordDataVO.getAction().equals("modified") || passwordDataVO.getAction().equals("delete")){
+                /* todo the local (offline) version of the data must be updated
+                   additionally, the online property 'modified' or 'deleted' must be changed so that offline data is not updated again
+                   thoughts... change the online version back to 'created' and 'deleted' to 'deleted_x' */
+            }
+        }
     }
 
     private ArrayList<PasswordDataVO> doDecipherResult(PasswordDataVO[] passwordDataVOs){

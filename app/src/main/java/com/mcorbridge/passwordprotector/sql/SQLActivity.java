@@ -12,6 +12,9 @@ import com.mcorbridge.passwordprotector.model.ApplicationModel;
 
 import java.util.List;
 
+/**
+ * this is a test class and is not used in the final application
+ */
 public class SQLActivity extends Activity {
 
     ApplicationModel applicationModel;
