@@ -2,9 +2,11 @@ package com.mcorbridge.passwordprotector.update;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.method.TextKeyListener;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,11 +14,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ToggleButton;
 
+import com.mcorbridge.passwordprotector.JSON.JsonTask;
 import com.mcorbridge.passwordprotector.R;
+import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
+import com.mcorbridge.passwordprotector.encryption.AESEncryption;
+import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
+import com.mcorbridge.passwordprotector.service.ServletPostAsyncTask;
+import com.mcorbridge.passwordprotector.sql.Password;
+import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
 import com.mcorbridge.passwordprotector.vo.PasswordDataVO;
 
-public class UpdateActivity extends Activity {
+public class UpdateActivity extends Activity implements IPasswordActivity{
 
     PasswordDataVO passwordDataVO;
     EditText category;
@@ -25,6 +34,7 @@ public class UpdateActivity extends Activity {
     Button buttonModify;
     Button buttonDelete;
     ApplicationModel applicationModel;
+    private PasswordsDataSource passwordsDataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +44,9 @@ public class UpdateActivity extends Activity {
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
 
         applicationModel = ApplicationModel.getInstance();
+
+        // for offline data work
+        passwordsDataSource = new PasswordsDataSource(getApplicationContext());
 
         savedInstanceState = getIntent().getExtras();
         passwordDataVO = (PasswordDataVO)savedInstanceState.getSerializable("passwordDataVO");
@@ -46,13 +59,6 @@ public class UpdateActivity extends Activity {
         buttonDelete = (Button)findViewById(R.id.buttonDelete);
 
         final ToggleButton toggleButton = (ToggleButton)findViewById(R.id.toggleButton);
-
-        // the plan at this point is to NOT allow offline modification (update or delete)
-        // the reason is that it is complicated to synchronize date between the local and cloud
-        // (I just need some more time to think about it)
-        if(!applicationModel.getIsDataConnected()){
-            toggleButton.setEnabled(false);
-        }
 
         toggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +140,7 @@ public class UpdateActivity extends Activity {
     public void doModify(View v){
         new AlertDialog.Builder(this)
                 .setTitle("Alert")
-                .setMessage("You are about to modify password information\nIs this what you want to do?")
+                .setMessage(R.string.info_update)
                 .setIcon(R.drawable.alert_icon)
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -143,7 +149,11 @@ public class UpdateActivity extends Activity {
                 })
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // stub
+                        try {
+                            modifyPasswordData();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 })
                 .show();
@@ -152,7 +162,7 @@ public class UpdateActivity extends Activity {
     public void doDelete(View v){
         new AlertDialog.Builder(this)
                 .setTitle("Alert")
-                .setMessage("You are about to delete password information\nIs this what you want to do?")
+                .setMessage(R.string.info_delete)
                 .setIcon(R.drawable.alert_icon)
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -161,9 +171,73 @@ public class UpdateActivity extends Activity {
                 })
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // stub
+                        try {
+                            deletePasswordData();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 })
                 .show();
+    }
+
+    private void modifyPasswordData() throws  Exception{
+        String cty = category.getText().toString();
+        String ttl = title.getText().toString();
+        String vlu = value.getText().toString();
+        Long id = passwordDataVO.getId();
+
+        if(applicationModel.getIsDataConnected()){
+            String jsonRequest = JsonTask.createUpdateJSON(cty, ttl, vlu, id);
+            new ServletPostAsyncTask().execute(new Pair<Context, String>(this, jsonRequest));
+            updateValueLocalDatabase(id, cty, ttl, vlu, 0);
+        }else{
+            updateValueLocalDatabase(id, cty, ttl, vlu, 1);
+        }
+
+    }
+
+    private void deletePasswordData() throws  Exception{
+        String cty = category.getText().toString();
+        String ttl = title.getText().toString();
+        String vlu = value.getText().toString();
+        Long id = passwordDataVO.getId();
+
+        if(applicationModel.getIsDataConnected()){
+            String jsonRequest = JsonTask.createDeleteJSON(cty, ttl, vlu, id);
+            new ServletPostAsyncTask().execute(new Pair<Context, String>(this, jsonRequest));
+            deleteValueLocalDatabase(id, 0);
+        }else{
+            deleteValueLocalDatabase(id, 1);
+        }
+
+    }
+
+    private void updateValueLocalDatabase(Long id, String category, String title, String value, int modified)throws Exception{
+        passwordsDataSource.open();
+        Password password = new Password();
+        String cipher = applicationModel.getCipher();
+        password.setAction(ApplicationConstants.UPDATE);
+        password.setCategory(AESEncryption.cipher(cipher, category));
+        password.setTitle(AESEncryption.cipher(cipher, title));
+        password.setValue(AESEncryption.cipher(cipher, value));
+        password.setPswdID(id);
+        password.setModified(modified);
+        passwordsDataSource.updatePassword(password);
+        passwordsDataSource.close();
+    }
+
+    private void deleteValueLocalDatabase(Long id, int modified)throws Exception{
+        passwordsDataSource.open();
+        Password password = new Password();
+        password.setAction(ApplicationConstants.DELETE);
+        password.setPswdID(id);
+        password.setModified(modified);
+        passwordsDataSource.deletePassword(password);
+        passwordsDataSource.close();
+    }
+
+    public void processResults(String results){
+        System.out.println(results);
     }
 }

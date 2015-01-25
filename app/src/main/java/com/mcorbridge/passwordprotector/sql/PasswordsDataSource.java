@@ -10,6 +10,8 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,9 +59,17 @@ public class PasswordsDataSource {
     }
 
     public void deletePassword(Password password) {
-        long id = password.getId();
-        System.out.println("Comment deleted with id: " + id);
-        database.delete(SQLiteHelper.TABLE_PASSWORDS, SQLiteHelper.COLUMN_ID + " = " + id, null);
+        long pswdID = password.getPswdID();
+
+        System.out.println("flag password as 'delete' with id: " + pswdID);
+        //todo find a way to actually delete values that are flagged 'delete'
+        //database.delete(SQLiteHelper.TABLE_PASSWORDS, SQLiteHelper.COLUMN_PASSWORD_ID + " = " + pswdID, null);
+
+        // rather that delete the data, it will flagged as 'delete'
+        String strFilter = SQLiteHelper.COLUMN_PASSWORD_ID +"=" + pswdID;
+        ContentValues values = new ContentValues();
+        values.put(SQLiteHelper.COLUMN_ACTION, ApplicationConstants.DELETE);
+        database.update(SQLiteHelper.TABLE_PASSWORDS, values, strFilter, null);
     }
 
     public List<Password> getAllPasswords() {
@@ -67,7 +77,7 @@ public class PasswordsDataSource {
 
         Cursor cursor = database.query(SQLiteHelper.TABLE_PASSWORDS,
                                         allColumns,
-                                        null,
+                                        SQLiteHelper.COLUMN_ACTION + "!='delete'",
                                         null,
                                         null,
                                         null,
@@ -87,7 +97,18 @@ public class PasswordsDataSource {
     public void setPasswordModifiedState(Password password){
         ContentValues newValues = new ContentValues();
         newValues.put(SQLiteHelper.COLUMN_MODIFIED, 0); // 0 = not modified, therefore upon update this data will NOT be synchronized
-        database.update(SQLiteHelper.TABLE_PASSWORDS, newValues, "_id="+password.getId(), null);
+        database.update(SQLiteHelper.TABLE_PASSWORDS, newValues, "_id=" + password.getId(), null);
+    }
+
+    public void updatePassword(Password password){
+        String strFilter = SQLiteHelper.COLUMN_PASSWORD_ID +"=" + password.getPswdID();
+        ContentValues values = new ContentValues();
+        values.put(SQLiteHelper.COLUMN_ACTION, ApplicationConstants.UPDATE);
+        values.put(SQLiteHelper.COLUMN_CATEGORY, password.getCategory());
+        values.put(SQLiteHelper.COLUMN_MODIFIED, password.isModified());
+        values.put(SQLiteHelper.COLUMN_TITLE, password.getTitle());
+        values.put(SQLiteHelper.COLUMN_VALUE, password.getValue());
+        database.update(SQLiteHelper.TABLE_PASSWORDS, values, strFilter, null);
     }
 
     public void deleteLocalPasswordData(){

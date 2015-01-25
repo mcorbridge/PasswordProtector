@@ -111,6 +111,7 @@ public class ReadActivity extends Activity implements IPasswordActivity{
         while(iterator.hasNext()){
             PasswordDataVO passwordDataVO = new PasswordDataVO();
             Password password = (Password)iterator.next();
+            passwordDataVO.setId(password.getPswdID());
             passwordDataVO.setCategory(password.getCategory());
             passwordDataVO.setName(password.getName());
             passwordDataVO.setTitle(password.getTitle());

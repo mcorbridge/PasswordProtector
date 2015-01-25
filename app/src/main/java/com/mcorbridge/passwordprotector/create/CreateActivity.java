@@ -21,7 +21,7 @@ import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
 
 public class CreateActivity extends Activity implements IPasswordActivity{
 
-    ApplicationModel applicationModel;
+    private ApplicationModel applicationModel;
     private PasswordsDataSource passwordsDataSource;
 
     @Override
@@ -69,32 +69,35 @@ public class CreateActivity extends Activity implements IPasswordActivity{
         String title = editTextTitle.getText().toString();
         String value = editTextValue.getText().toString();
 
+        //'personal' remains the default category
         if(category.length() == 0){
             category = "personal";
         }
 
         String jsonRequest = JsonTask.createJSON(category,title,value);
 
+        //If the app is has a network connection save to cloud and save local db simultaneously!
         if(applicationModel.getIsDataConnected()){
-            postToServlet(jsonRequest);
-            saveToLocalDatabase(JsonTask.getID(),category,title,value,false); // save to cloud and local db simultaneously
+            postToServlet(jsonRequest); //
+            saveToLocalDatabase(JsonTask.getID(),category,title,value,0); // '0' flags this as a value that does NOT need to be synchronized with the cloud
         }else{
-            saveToLocalDatabase(JsonTask.getID(),category,title,value,true); // 'true' flags this as not synchronized with the cloud
+            saveToLocalDatabase(JsonTask.getID(),category,title,value,1); // '1' flags this as a value that MUST be synchronized with the cloud
         }
 
         Intent intent = new Intent(this, PasswordDataActivity.class);
         startActivity(intent);
     }
 
-    private void saveToLocalDatabase(Long id, String category, String title, String value, boolean modified)throws Exception{
+    private void saveToLocalDatabase(Long id, String category, String title, String value, int modified)throws Exception{
         passwordsDataSource.open();
         String cipher = applicationModel.getCipher();
-        String action = AESEncryption.cipher(cipher, "create");
+        String action = "create"; // the action is not encrypted
         category = AESEncryption.cipher(cipher,category);
         title = AESEncryption.cipher(cipher,title);
         value = AESEncryption.cipher(cipher,value);
         String name = applicationModel.getEmail();
-        passwordsDataSource.createPassword(id,action,category,1,name,title,value);
+        int isModified = modified; // I changed this from boolean to int. Why? I made a booboo  - but decided to stick with int in the end
+        passwordsDataSource.createPassword(id,action,category,isModified,name,title,value);
         passwordsDataSource.close();
     }
 

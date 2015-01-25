@@ -35,6 +35,28 @@ public class JsonTask {
         return json.toString();
     }
 
+    public static String createUpdateJSON(String category, String title, String value, Long id) throws Exception{
+        JSONObject json = new JSONObject();
+        json.put("value", AESEncryption.cipher(applicationModel.getCipher(),value));
+        json.put("name", applicationModel.getEmail());
+        json.put("category", AESEncryption.cipher(applicationModel.getCipher(),category));
+        json.put("title", AESEncryption.cipher(applicationModel.getCipher(),title));
+        json.put("action", "update");
+        json.put("id", id);
+        return json.toString();
+    }
+
+    public static String createDeleteJSON(String category, String title, String value, Long id) throws Exception{
+        JSONObject json = new JSONObject();
+        json.put("value", AESEncryption.cipher(applicationModel.getCipher(),value));
+        json.put("name", applicationModel.getEmail());
+        json.put("category", AESEncryption.cipher(applicationModel.getCipher(),category));
+        json.put("title", AESEncryption.cipher(applicationModel.getCipher(),title));
+        json.put("action", "delete");
+        json.put("id", id);
+        return json.toString();
+    }
+
     /**
      * this is used exclusively for data that was created and stored in the offline mode
      * @param category
