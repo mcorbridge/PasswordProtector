@@ -77,19 +77,19 @@ public class CreateActivity extends Activity implements IPasswordActivity{
 
         if(applicationModel.getIsDataConnected()){
             postToServlet(jsonRequest);
-            saveToLocalDatabase(category,title,value,0); // 0 (modified=false) saved to cloud and local db simultaneously
+            saveToLocalDatabase(category,title,value,false); // save to cloud and local db simultaneously
         }else{
-            saveToLocalDatabase(category,title,value,1); // 1 (modified=true) indicates that this record is NOT synchronized with the cloud (local only)
+            saveToLocalDatabase(category,title,value,true); // 'true' flags this as not synchronized with the cloud
         }
 
         Intent intent = new Intent(this, PasswordDataActivity.class);
         startActivity(intent);
     }
 
-    private void saveToLocalDatabase(String category, String title, String value, int modified)throws Exception{
+    private void saveToLocalDatabase(String category, String title, String value, boolean modified)throws Exception{
         passwordsDataSource.open();
         String cipher = applicationModel.getCipher();
-        String action = "create";
+        String action = AESEncryption.cipher(cipher, "create");
         category = AESEncryption.cipher(cipher,category);
         title = AESEncryption.cipher(cipher,title);
         value = AESEncryption.cipher(cipher,value);
