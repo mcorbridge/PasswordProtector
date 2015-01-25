@@ -7,6 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.SupplicantState;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.Menu;
@@ -116,14 +119,22 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
 
     /**
      * this application can run in an offline mode IF there is no mobile data communications (wifi or mobile data)
-     * of course, I will need to add all the sql to handle this (yuk!)
      */
     public void checkMobileDataConnectivity(){
-        applicationModel.setIsDataConnected(true);
+        applicationModel.setIsDataConnected(true); //default state
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-        boolean mobileDataEnabled = false; // Assume disabled
+        // supplicant state (http://stackoverflow.com/questions/3841317/how-to-see-if-wifi-is-connected-in-android/3841444#3841444)
+        boolean isWifiAuthenticated = false;
+        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        SupplicantState supState = wifiInfo.getSupplicantState();
+        if(supState == supState.ASSOCIATED){
+            isWifiAuthenticated = true;
+        }
+
+        boolean mobileDataEnabled = false;
         try {
             Class cmClass = Class.forName(connManager.getClass().getName());
             Method method = cmClass.getDeclaredMethod("getMobileDataEnabled");
@@ -136,7 +147,7 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
         }
 
         // go to offline mode IF there is no data connection
-        if(!netInfo.isConnected() && !mobileDataEnabled){
+        if(!netInfo.isConnected() && !mobileDataEnabled && !isWifiAuthenticated){
             applicationModel.setIsDataConnected(false);
             final Intent intent = new Intent(this, SQLActivity.class);
             new AlertDialog.Builder(this)
@@ -193,20 +204,23 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
             }
         }
 
-        // if offline data was added, rebuild the local db with the cloud data
-        // when we have received a copy of at as per a read request
+        // pIterator is used to send any data that has been created offline to the cloud
         if(passwordDataVOs.size() > 0){
-            passwordsDataSource.open();
-            passwordsDataSource.deleteLocalPasswordData();
-            passwordsDataSource.close();
-            applicationModel.setRequestLocalDatabaseRebuild(true); // flag the app to rebuild the local database
             pIterator = passwordDataVOs.iterator();
         }
 
-        // if nothing is in the db, we should synchronize with the cloud version
         if(getNumValuesInLocalDatabase() == 0){
             applicationModel.setRequestLocalDatabaseRebuild(true); // flag the app to rebuild the local database
         }
+    }
+
+    // clean up operation
+    // user will have the option of cleaning out the local db and creating a clean copy by synchronizing with cloud values
+    public void cleanOutLocalDatabaseFlagForRebuild(){
+        passwordsDataSource.open();
+        passwordsDataSource.deleteLocalPasswordData();
+        passwordsDataSource.close();
+        applicationModel.setRequestLocalDatabaseRebuild(true); // flag the app to rebuild the local database
     }
 
     public int getNumValuesInLocalDatabase(){
@@ -216,22 +230,13 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
         return passwords.size();
     }
 
-
-    private void saveToLocalDatabase(Long id,String category, String title, String value)throws Exception{
-        passwordsDataSource.open();
-        String action = "create";
-        String name = applicationModel.getEmail();
-        passwordsDataSource.createPassword(id,action,category,0,name,title,value);
-        passwordsDataSource.close();
-    }
-
     private void createCloudPasswordData() throws Exception{
         if(pIterator == null)
             return;
         PasswordDataVO passwordDataVO = (PasswordDataVO)pIterator.next();
         // note that the data is already encrypted
         String jsonRequest = JsonTask.createPreEncryptedJSON(passwordDataVO.getCategory(), passwordDataVO.getTitle(), passwordDataVO.getValue());
-        System.out.println("******* cloud synchronization *******");
+        System.out.println("********************* cloud synchronization *********************");
         System.out.println(jsonRequest);
         postToServlet(jsonRequest);
     }
@@ -241,7 +246,7 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
     }
 
     /**
-     * ideally this should NOT run if there are no new records
+     * this should NOT run if there are no new records
      * @param results
      */
     public void processResults(String results){
