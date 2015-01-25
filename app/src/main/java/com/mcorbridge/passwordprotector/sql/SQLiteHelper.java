@@ -12,6 +12,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     public static final String TABLE_PASSWORDS = "passwords";
     public static final String COLUMN_ID = "_id";
+    public static final String COLUMN_PASSWORD_ID = "pswd_id";
     public static final String COLUMN_MODIFIED = "modified";
     public static final String COLUMN_ACTION = "action";
     public static final String COLUMN_CATEGORY = "category";
@@ -25,7 +26,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     private static final String DATABASE_CREATE = "create table "
             + TABLE_PASSWORDS + "("
             + COLUMN_ID + " integer primary key autoincrement, "
-            + COLUMN_MODIFIED + " integer not null,"
+            + COLUMN_PASSWORD_ID + " long not null,"
+            + COLUMN_MODIFIED + " int not null,"
             + COLUMN_ACTION + " text not null,"
             + COLUMN_CATEGORY + " text not null,"
             + COLUMN_NAME + " text not null,"

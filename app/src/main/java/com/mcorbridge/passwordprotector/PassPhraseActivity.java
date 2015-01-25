@@ -98,7 +98,7 @@ public class PassPhraseActivity extends Activity {
         String concat = question.concat(answer);
         String cipher = AESEncryption.cipher(applicationModel.APPLICATION_SECRET_KEY, concat);
 
-        // create cipher
+        // create secret key
         String reverse = new StringBuilder(cipher).reverse().toString();
         String slice1 = reverse.substring(0,3);
         String slice2 = reverse.substring(reverse.length()/2,(reverse.length()/2)+3);
@@ -147,7 +147,7 @@ public class PassPhraseActivity extends Activity {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton("Ok, got it.", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            // stub
+// stub
                         }
                     })
                     .show();

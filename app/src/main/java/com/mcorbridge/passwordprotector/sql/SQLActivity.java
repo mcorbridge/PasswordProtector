@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.mcorbridge.passwordprotector.JSON.JsonTask;
 import com.mcorbridge.passwordprotector.R;
 import com.mcorbridge.passwordprotector.encryption.AESEncryption;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
@@ -64,7 +65,7 @@ public class SQLActivity extends Activity {
         String title = AESEncryption.cipher(cipher,"test");
         String value = AESEncryption.cipher(cipher,"test");
         String name = applicationModel.getEmail();
-        passwordsDataSource.createPassword(action,category,modified,name,title,value);
+        passwordsDataSource.createPassword(JsonTask.createRndID(),action,category,modified,name,title,value);
         passwordsDataSource.close();
     }
 

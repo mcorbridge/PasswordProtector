@@ -217,16 +217,17 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
     }
 
 
-    private void saveToLocalDatabase(String category, String title, String value)throws Exception{
+    private void saveToLocalDatabase(Long id,String category, String title, String value)throws Exception{
         passwordsDataSource.open();
         String action = "create";
         String name = applicationModel.getEmail();
-        passwordsDataSource.createPassword(action,category,0,name,title,value);
+        passwordsDataSource.createPassword(id,action,category,0,name,title,value);
         passwordsDataSource.close();
     }
 
     private void createCloudPasswordData() throws Exception{
-
+        if(pIterator == null)
+            return;
         PasswordDataVO passwordDataVO = (PasswordDataVO)pIterator.next();
         // note that the data is already encrypted
         String jsonRequest = JsonTask.createPreEncryptedJSON(passwordDataVO.getCategory(), passwordDataVO.getTitle(), passwordDataVO.getValue());

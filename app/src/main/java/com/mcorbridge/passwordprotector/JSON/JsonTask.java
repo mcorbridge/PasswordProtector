@@ -16,15 +16,22 @@ public class JsonTask {
 
     private static ApplicationModel applicationModel = ApplicationModel.getInstance();
 
+    private static long id;
+
+    public static long getID(){
+        return  id;
+    }
+
 
     public static String createJSON(String category, String title, String value) throws Exception{
+        id = createRndID();
         JSONObject json = new JSONObject();
         json.put("value", AESEncryption.cipher(applicationModel.getCipher(),value));
         json.put("name", applicationModel.getEmail());
         json.put("category", AESEncryption.cipher(applicationModel.getCipher(),category));
         json.put("title", AESEncryption.cipher(applicationModel.getCipher(),title));
         json.put("action", "create");
-        json.put("id", createRndID());
+        json.put("id", id);
         return json.toString();
     }
 
@@ -85,7 +92,7 @@ public class JsonTask {
         return json.toString();
     }
 
-    private static long createRndID(){
+    public static long createRndID(){
         return Math.abs(UUID.randomUUID().getMostSignificantBits());
     }
 

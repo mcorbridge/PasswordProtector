@@ -174,17 +174,15 @@ public class ReadActivity extends Activity implements IPasswordActivity{
         for (int n=0;n<passwordDataVOs.length;n++){
             PasswordDataVO passwordDataVO = passwordDataVOs[n];
             String action = "create";
+            Long id = passwordDataVO.getId();
             String category = passwordDataVO.getCategory();
             String title = passwordDataVO.getTitle();
             String value = passwordDataVO.getValue();
             int modified = 0; // modified = 0 indicates that none of these records will be synchronized in the future
             String name = passwordDataVO.getName();
-            passwordsDataSource.createPassword(action,category,modified,name,title,value);
+            passwordsDataSource.createPassword(id,action,category,modified,name,title,value);
         }
         passwordsDataSource.close();
-
-        // todo remove this call when finished
-        readFromLocalDatabase();
     }
 
     private ArrayList<PasswordDataVO> doDecipherResult(PasswordDataVO[] passwordDataVOs){

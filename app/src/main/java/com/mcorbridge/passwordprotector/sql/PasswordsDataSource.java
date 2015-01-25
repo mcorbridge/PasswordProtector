@@ -19,6 +19,7 @@ public class PasswordsDataSource {
     private SQLiteDatabase database;
     private SQLiteHelper dbHelper;
     private String[] allColumns = { SQLiteHelper.COLUMN_ID,
+                                    SQLiteHelper.COLUMN_PASSWORD_ID,
                                     SQLiteHelper.COLUMN_ACTION,
                                     SQLiteHelper.COLUMN_CATEGORY,
                                     SQLiteHelper.COLUMN_MODIFIED,
@@ -38,8 +39,9 @@ public class PasswordsDataSource {
         dbHelper.close();
     }
 
-    public Password createPassword(String action, String category, int modified, String name, String title, String value) {
+    public Password createPassword(Long id, String action, String category, int modified, String name, String title, String value) {
         ContentValues values = new ContentValues();
+        values.put(SQLiteHelper.COLUMN_PASSWORD_ID, id);
         values.put(SQLiteHelper.COLUMN_ACTION, action);
         values.put(SQLiteHelper.COLUMN_CATEGORY, category);
         values.put(SQLiteHelper.COLUMN_MODIFIED, modified);
@@ -57,8 +59,7 @@ public class PasswordsDataSource {
     public void deletePassword(Password password) {
         long id = password.getId();
         System.out.println("Comment deleted with id: " + id);
-        database.delete(SQLiteHelper.TABLE_PASSWORDS, SQLiteHelper.COLUMN_ID
-                + " = " + id, null);
+        database.delete(SQLiteHelper.TABLE_PASSWORDS, SQLiteHelper.COLUMN_ID + " = " + id, null);
     }
 
     public List<Password> getAllPasswords() {
@@ -95,13 +96,14 @@ public class PasswordsDataSource {
 
     private Password cursorToPassword(Cursor cursor) {
         Password password = new Password();
-        password.setId(cursor.getLong(0));
-        password.setAction(cursor.getString(1));
-        password.setCategory(cursor.getString(2));
-        password.setModified(cursor.getInt(3));
-        password.setName(cursor.getString(4));
-        password.setTitle(cursor.getString(5));
-        password.setValue(cursor.getString(6));
+        password.setId(cursor.getInt(0));
+        password.setPswdID(cursor.getLong(1));
+        password.setAction(cursor.getString(2));
+        password.setCategory(cursor.getString(3));
+        password.setModified(cursor.getInt(4));
+        password.setName(cursor.getString(5));
+        password.setTitle(cursor.getString(6));
+        password.setValue(cursor.getString(7));
         return password;
     }
 }

@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.mcorbridge.passwordprotector.JSON.JsonTask;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.sql.Password;
 import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
@@ -67,7 +68,7 @@ public class TestActivity extends Activity {
             String title = "title";
             String value = "value";
             String name = "mikecorbridge@gmail.com";
-            passwordsDataSource.createPassword(action,category,1,name,title,value);
+            passwordsDataSource.createPassword(JsonTask.createRndID(),action,category,1,name,title,value);
             passwordsDataSource.close();
     }
 
@@ -79,7 +80,7 @@ public class TestActivity extends Activity {
         String title = "title";
         String value = "value";
         String name = "mikecorbridge@gmail.com";
-        passwordsDataSource.createPassword(action,category,0,name,title,value);
+        passwordsDataSource.createPassword(JsonTask.createRndID(),action,category,0,name,title,value);
         passwordsDataSource.close();
     }
 

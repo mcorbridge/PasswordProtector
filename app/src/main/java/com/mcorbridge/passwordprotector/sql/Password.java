@@ -6,9 +6,13 @@ package com.mcorbridge.passwordprotector.sql;
  */
 public class Password {
 
-    private long id;
-    public long getId() {return id;}
-    public void setId(long id) {this.id = id;}
+    private int id;
+    public int getId() {return id;}
+    public void setId(int id) {this.id = id;}
+
+    private long pswdID;
+    public long getPswdID() {return pswdID;}
+    public void setPswdID(long pswdID) {this.pswdID = pswdID;}
 
     private String action;
     public String getAction() {return action;}
