@@ -60,7 +60,7 @@ public class SQLActivity extends Activity {
         String cipher = applicationModel.getCipher();
         String action = AESEncryption.cipher(cipher,"test");
         String category = AESEncryption.cipher(cipher,"personal");
-        boolean modified = true;
+        int modified = 1;
         String title = AESEncryption.cipher(cipher,"test");
         String value = AESEncryption.cipher(cipher,"test");
         String name = applicationModel.getEmail();

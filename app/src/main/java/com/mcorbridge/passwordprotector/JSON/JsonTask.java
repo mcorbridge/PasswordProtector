@@ -26,7 +26,25 @@ public class JsonTask {
         json.put("action", "create");
         json.put("id", createRndID());
         return json.toString();
+    }
 
+    /**
+     * this is used exclusively for data that was created and stored in the offline mode
+     * @param category
+     * @param title
+     * @param value
+     * @return
+     * @throws Exception
+     */
+    public static String createPreEncryptedJSON(String category, String title, String value) throws Exception{
+        JSONObject json = new JSONObject();
+        json.put("value", value);
+        json.put("name", applicationModel.getEmail());
+        json.put("category", category);
+        json.put("title",title);
+        json.put("action", "create");
+        json.put("id", createRndID());
+        return json.toString();
     }
 
     /**

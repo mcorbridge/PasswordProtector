@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ToggleButton;
 
 import com.mcorbridge.passwordprotector.R;
+import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.vo.PasswordDataVO;
 
 public class UpdateActivity extends Activity {
@@ -23,6 +24,7 @@ public class UpdateActivity extends Activity {
     EditText value;
     Button buttonModify;
     Button buttonDelete;
+    ApplicationModel applicationModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,8 @@ public class UpdateActivity extends Activity {
         setContentView(R.layout.activity_update);
 
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+
+        applicationModel = ApplicationModel.getInstance();
 
         savedInstanceState = getIntent().getExtras();
         passwordDataVO = (PasswordDataVO)savedInstanceState.getSerializable("passwordDataVO");
@@ -41,9 +45,15 @@ public class UpdateActivity extends Activity {
         buttonModify = (Button)findViewById(R.id.buttonModify);
         buttonDelete = (Button)findViewById(R.id.buttonDelete);
 
-
-
         final ToggleButton toggleButton = (ToggleButton)findViewById(R.id.toggleButton);
+
+        // the plan at this point is to NOT allow offline modification (update or delete)
+        // the reason is that it is complicated to synchronize date between the local and cloud
+        // (I just need some more time to think about it)
+        if(!applicationModel.getIsDataConnected()){
+            toggleButton.setEnabled(false);
+        }
+
         toggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

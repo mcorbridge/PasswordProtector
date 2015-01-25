@@ -25,7 +25,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     private static final String DATABASE_CREATE = "create table "
             + TABLE_PASSWORDS + "("
             + COLUMN_ID + " integer primary key autoincrement, "
-            + COLUMN_MODIFIED + " boolean not null,"
+            + COLUMN_MODIFIED + " integer not null,"
             + COLUMN_ACTION + " text not null,"
             + COLUMN_CATEGORY + " text not null,"
             + COLUMN_NAME + " text not null,"
@@ -48,5 +48,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PASSWORDS);
         onCreate(db);
     }
+
 
 }

@@ -38,7 +38,7 @@ public class PasswordsDataSource {
         dbHelper.close();
     }
 
-    public Password createPassword(String action, String category, boolean modified, String name, String title, String value) {
+    public Password createPassword(String action, String category, int modified, String name, String title, String value) {
         ContentValues values = new ContentValues();
         values.put(SQLiteHelper.COLUMN_ACTION, action);
         values.put(SQLiteHelper.COLUMN_CATEGORY, category);
@@ -83,12 +83,22 @@ public class PasswordsDataSource {
         return passwords;
     }
 
+    public void setPasswordModifiedState(Password password){
+        ContentValues newValues = new ContentValues();
+        newValues.put(SQLiteHelper.COLUMN_MODIFIED, 0); // 0 = not modified, therefore upon update this data will NOT be synchronized
+        database.update(SQLiteHelper.TABLE_PASSWORDS, newValues, "_id="+password.getId(), null);
+    }
+
+    public void deleteLocalPasswordData(){
+        database.delete(SQLiteHelper.TABLE_PASSWORDS, null, null);
+    }
+
     private Password cursorToPassword(Cursor cursor) {
         Password password = new Password();
         password.setId(cursor.getLong(0));
         password.setAction(cursor.getString(1));
         password.setCategory(cursor.getString(2));
-        password.setModified(true);
+        password.setModified(cursor.getInt(3));
         password.setName(cursor.getString(4));
         password.setTitle(cursor.getString(5));
         password.setValue(cursor.getString(6));

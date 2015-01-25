@@ -125,11 +125,22 @@ public class ReadActivity extends Activity implements IPasswordActivity{
     public void processResults(String results){
         progressBar.setVisibility(View.INVISIBLE);
         Gson gson = new Gson();
-        PasswordDataVO[] passwordDataVOs = gson.fromJson(results, PasswordDataVO[].class);
+        final PasswordDataVO[] passwordDataVOs = gson.fromJson(results, PasswordDataVO[].class);
+
+        //rebuild the local database IF it needs to be restored
+        // and do it inside a new thread
+        if(applicationModel.isRequestLocalDatabaseRebuild()){
+            new Thread(new Runnable() {
+                public void run() {
+                    rebuildLocalDatabase(passwordDataVOs);
+                }
+            }).start();
+        }
+
         // decrypt the password data
         ArrayList<PasswordDataVO> decipheredPasswordDataVOs = doDecipherResult(passwordDataVOs);
         bindPasswordDataToList(decipheredPasswordDataVOs);
-        findCloudModifiedPasswordVOs(decipheredPasswordDataVOs);
+
         //testDecipheredPasswordDataVOs(decipheredPasswordDataVOs);
     }
 
@@ -152,16 +163,28 @@ public class ReadActivity extends Activity implements IPasswordActivity{
         });
     }
 
-    private void findCloudModifiedPasswordVOs(ArrayList<PasswordDataVO> decipheredPasswordDataVOs){
-        Iterator iterator = decipheredPasswordDataVOs.iterator();
-        while(iterator.hasNext()){
-            PasswordDataVO passwordDataVO = (PasswordDataVO)iterator.next();
-            if(passwordDataVO.getAction().equals("modified") || passwordDataVO.getAction().equals("delete")){
-                /* todo the local (offline) version of the data must be updated
-                   additionally, the online property 'modified' or 'deleted' must be changed so that offline data is not updated again
-                   thoughts... change the online version back to 'created' and 'deleted' to 'deleted_x' */
-            }
+    /**
+     * At least one passwordData was created offline, and this value has been uploaded to cloud storage.
+     * As a result of this, all records in the local (offline) database have been deleted.
+     * This method will rebuild the local database from the most up-to-date records from the cloud
+     * @param passwordDataVOs
+     */
+    private void rebuildLocalDatabase(PasswordDataVO[] passwordDataVOs){
+        passwordsDataSource.open();
+        for (int n=0;n<passwordDataVOs.length;n++){
+            PasswordDataVO passwordDataVO = passwordDataVOs[n];
+            String action = "create";
+            String category = passwordDataVO.getCategory();
+            String title = passwordDataVO.getTitle();
+            String value = passwordDataVO.getValue();
+            int modified = 0; // modified = 0 indicates that none of these records will be synchronized in the future
+            String name = passwordDataVO.getName();
+            passwordsDataSource.createPassword(action,category,modified,name,title,value);
         }
+        passwordsDataSource.close();
+
+        // todo remove this call when finished
+        readFromLocalDatabase();
     }
 
     private ArrayList<PasswordDataVO> doDecipherResult(PasswordDataVO[] passwordDataVOs){

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -106,10 +107,11 @@ public class PassPhraseActivity extends Activity {
         applicationModel.setSecretKey(secretKey);
 
         //persist these encrypted values to the shared preferences
-        System.out.println("email: " + applicationModel.getEmail());
-        System.out.println("secret key: " + applicationModel.getSecretKey());
         setSharedPreferences(applicationModel.getSecretKey(), "secret_key");
         setSharedPreferences(applicationModel.getEmail(), "secret_email");
+
+        Intent intent = new Intent(this, VisualKeyActivity.class);
+        startActivity(intent);
     }
 
     public void setSharedPreferences(String key, String type){

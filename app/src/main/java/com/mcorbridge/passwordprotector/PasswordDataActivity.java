@@ -8,14 +8,17 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.mcorbridge.passwordprotector.JSON.JsonTask;
 import com.mcorbridge.passwordprotector.create.CreateActivity;
 import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.read.ReadActivity;
+import com.mcorbridge.passwordprotector.service.ServletPostAsyncTask;
 import com.mcorbridge.passwordprotector.sql.Password;
 import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
 import com.mcorbridge.passwordprotector.sql.SQLActivity;
@@ -151,7 +154,11 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
             List<Password> passwords = readFromLocalDatabase();
             findModifiedPasswordDataVOs(passwords);
             // persist these local passwordDataVOs to the cloud
-            createCloudPasswordData();
+            try {
+                createCloudPasswordData();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -164,8 +171,9 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
 
     /**
      * Note that the 'password' data object is different from the 'PasswordDataVO'
-     * The 'password' is ONLY created in the offline mode, and contains a boolean 'modified' that indicates
+     * The 'password' is ONLY created in the offline mode, and contains a int=1 'modified' that indicates
      * that this data must be synchronized with the cloud data when the app next goes online
+     * if int modified = 0, then the password will NOT be synchronized with the cloud version
      * @param passwords
      * @return
      */
@@ -174,7 +182,7 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
         passwordDataVOs = new ArrayList<PasswordDataVO>();
         while(iterator.hasNext()){
             Password password = (Password)iterator.next();
-            if(password.isModified()){ // this is the boolean 'modified' I was talking about
+            if(password.isModified() == 1){ // this is the 'modified' I was talking about
                 PasswordDataVO passwordDataVO = new PasswordDataVO();
                 passwordDataVO.setCategory(password.getCategory());
                 passwordDataVO.setName(password.getName());
@@ -184,19 +192,64 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
                 passwordDataVOs.add(passwordDataVO);
             }
         }
-        pIterator = passwordDataVOs.iterator();
+
+        // if offline data was added, rebuild the local db with the cloud data
+        // when we have received a copy of at as per a read request
+        if(passwordDataVOs.size() > 0){
+            passwordsDataSource.open();
+            passwordsDataSource.deleteLocalPasswordData();
+            passwordsDataSource.close();
+            applicationModel.setRequestLocalDatabaseRebuild(true); // flag the app to rebuild the local database
+            pIterator = passwordDataVOs.iterator();
+        }
+
+        // if nothing is in the db, we should synchronize with the cloud version
+        if(getNumValuesInLocalDatabase() == 0){
+            applicationModel.setRequestLocalDatabaseRebuild(true); // flag the app to rebuild the local database
+        }
     }
 
-    private void createCloudPasswordData(){
+    public int getNumValuesInLocalDatabase(){
+        passwordsDataSource.open();
+        List<Password> passwords = passwordsDataSource.getAllPasswords();
+        passwordsDataSource.close();
+        return passwords.size();
+    }
+
+
+    private void saveToLocalDatabase(String category, String title, String value)throws Exception{
+        passwordsDataSource.open();
+        String action = "create";
+        String name = applicationModel.getEmail();
+        passwordsDataSource.createPassword(action,category,0,name,title,value);
+        passwordsDataSource.close();
+    }
+
+    private void createCloudPasswordData() throws Exception{
+
         PasswordDataVO passwordDataVO = (PasswordDataVO)pIterator.next();
-        // todo the standard postToServlet operation
-
-
+        // note that the data is already encrypted
+        String jsonRequest = JsonTask.createPreEncryptedJSON(passwordDataVO.getCategory(), passwordDataVO.getTitle(), passwordDataVO.getValue());
+        System.out.println("******* cloud synchronization *******");
+        System.out.println(jsonRequest);
+        postToServlet(jsonRequest);
     }
 
+    private void postToServlet(String jsonRequest) throws  Exception{
+        new ServletPostAsyncTask().execute(new Pair<Context, String>(this, jsonRequest));
+    }
+
+    /**
+     * ideally this should NOT run if there are no new records
+     * @param results
+     */
     public void processResults(String results){
         while(pIterator.hasNext()){
-            createCloudPasswordData();
+            try {
+                createCloudPasswordData();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

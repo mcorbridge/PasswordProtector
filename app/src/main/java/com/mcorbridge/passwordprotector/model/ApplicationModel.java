@@ -88,4 +88,14 @@ public class ApplicationModel {
     }
 
     // ----------------------------------------------------------
+
+    private boolean requestLocalDatabaseRebuild;
+
+    public boolean isRequestLocalDatabaseRebuild() {
+        return requestLocalDatabaseRebuild;
+    }
+
+    public void setRequestLocalDatabaseRebuild(boolean requestLocalDatabaseRebuild) {
+        this.requestLocalDatabaseRebuild = requestLocalDatabaseRebuild;
+    }
 }

@@ -64,28 +64,22 @@ public class ServletPostAsyncTask extends AsyncTask<Pair<Context, String>, Void,
     }
 
     @Override
+    /**
+     * any class that uses this class and implements IPasswordActivity MUST be included
+     * in the following if-else or it will not be included in the onPostExecute
+     */
     protected void onPostExecute(final String result){
         //Toast.makeText(context, result, Toast.LENGTH_LONG).show();
         Activity main = (Activity)context;
 
         String className = main.getClass().getName();
 
-        if(className.contains("CreateActivity")){
-            try {
-            ((IPasswordActivity) main).processResults(result);
-            } catch (Exception e) {
-            e.printStackTrace();
-            }
-        }else if(className.contains("ReadActivity")){
-            try {
+        if( className.contains("CreateActivity") ||
+            className.contains("ReadActivity")   ||
+            className.contains("UpdateActivity") ||
+            className.contains("DeleteActivity") ||
+            className.contains("PasswordDataActivity")){
                 ((IPasswordActivity) main).processResults(result);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else if(className.contains("UpdateActivity")){
-
-        }else if(className.contains("DeleteActivity")){
-
         }
     }
 

@@ -14,9 +14,9 @@ public class Password {
     public String getAction() {return action;}
     public void setAction(String action) {this.action = action;}
 
-    private boolean modified;
-    public boolean isModified() {return modified;}
-    public void setModified(boolean modified) {this.modified = modified;}
+    private int modified;
+    public int isModified() {return modified;}
+    public void setModified(int modified) {this.modified = modified;}
 
     private String category;
     public String getCategory() {return category;}
