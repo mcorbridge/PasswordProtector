@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mcorbridge.passwordprotector.JSON.JsonTask;
+import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
 import com.mcorbridge.passwordprotector.create.CreateActivity;
 import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
@@ -195,6 +196,9 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
             Password password = (Password)iterator.next();
             if(password.isModified() == 1){ // this is the 'modified' I was talking about
                 PasswordDataVO passwordDataVO = new PasswordDataVO();
+                if(password.getAction().equals(ApplicationConstants.UPDATE) || password.getAction().equals(ApplicationConstants.DELETE)){
+                    passwordDataVO.setId(password.getPswdID());
+                }
                 passwordDataVO.setCategory(password.getCategory());
                 passwordDataVO.setName(password.getName());
                 passwordDataVO.setTitle(password.getTitle());
@@ -235,7 +239,7 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
             return;
         PasswordDataVO passwordDataVO = (PasswordDataVO)pIterator.next();
         // note that the data is already encrypted
-        String jsonRequest = JsonTask.createPreEncryptedJSON(passwordDataVO.getCategory(), passwordDataVO.getTitle(), passwordDataVO.getValue());
+        String jsonRequest = JsonTask.createPreEncryptedJSON(passwordDataVO.getCategory(), passwordDataVO.getTitle(), passwordDataVO.getValue(), passwordDataVO.getId());
         System.out.println("********************* cloud synchronization *********************");
         System.out.println(jsonRequest);
         postToServlet(jsonRequest);

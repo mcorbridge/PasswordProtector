@@ -65,14 +65,19 @@ public class JsonTask {
      * @return
      * @throws Exception
      */
-    public static String createPreEncryptedJSON(String category, String title, String value) throws Exception{
+    public static String createPreEncryptedJSON(String category, String title, String value, long pswdID) throws Exception{
         JSONObject json = new JSONObject();
         json.put("value", value);
         json.put("name", applicationModel.getEmail());
         json.put("category", category);
         json.put("title",title);
         json.put("action", "create");
-        json.put("id", createRndID());
+        if(pswdID == 0L){
+            json.put("id", pswdID);
+        }else{
+            json.put("id", createRndID());
+        }
+
         return json.toString();
     }
 
