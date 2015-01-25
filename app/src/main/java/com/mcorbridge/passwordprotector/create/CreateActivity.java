@@ -79,7 +79,7 @@ public class CreateActivity extends Activity implements IPasswordActivity{
             postToServlet(jsonRequest);
             saveToLocalDatabase(category,title,value,0); // 0 (modified=false) saved to cloud and local db simultaneously
         }else{
-            saveToLocalDatabase(category,title,value,1); // 1 (modified=true) indicates that this record is NOT synchronized with the cloud
+            saveToLocalDatabase(category,title,value,1); // 1 (modified=true) indicates that this record is NOT synchronized with the cloud (local only)
         }
 
         Intent intent = new Intent(this, PasswordDataActivity.class);
