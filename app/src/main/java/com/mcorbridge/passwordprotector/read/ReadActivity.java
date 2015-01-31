@@ -82,6 +82,15 @@ public class ReadActivity extends Activity implements IPasswordActivity{
 
     private void doRead() throws Exception{
         String jsonRequest = JsonTask.readJSON();
+
+        //if the read operation has already been performed, use the arrayList in memory
+        if(applicationModel.getDecipheredPasswordDataVOs() != null){
+            System.out.println("****************** read data from object in memory ********************");
+            progressBar.setVisibility(View.INVISIBLE);
+            bindPasswordDataToList(applicationModel.getDecipheredPasswordDataVOs());
+            return;
+        }
+
         if(applicationModel.getIsDataConnected()){
             postToServlet(jsonRequest);
         }else{
@@ -89,6 +98,13 @@ public class ReadActivity extends Activity implements IPasswordActivity{
         }
     }
 
+    /**
+     * this method calls the servlet specified in the ServletPostAsyncTask class and onResult calls the
+     * processResults method in this class
+     * This class, and any class that needs to be part of the request/response cycle MUST implement IPasswordActivity!
+     * @param jsonRequest
+     * @throws Exception
+     */
     private void postToServlet(String jsonRequest) throws  Exception{
         new ServletPostAsyncTask().execute(new Pair<Context, String>(this, jsonRequest));
     }
@@ -123,8 +139,12 @@ public class ReadActivity extends Activity implements IPasswordActivity{
         return passwordDataVOs;
     }
 
+    /**
+     * called upon result received from servlet
+     * @param results
+     */
     public void processResults(String results){
-        System.out.println("--> " + results);
+        System.out.println("processResults --> " + results);
         progressBar.setVisibility(View.INVISIBLE);
         Gson gson = new Gson();
         final PasswordDataVO[] passwordDataVOs = gson.fromJson(results, PasswordDataVO[].class);
@@ -144,7 +164,11 @@ public class ReadActivity extends Activity implements IPasswordActivity{
 
         // decrypt the password data
         ArrayList<PasswordDataVO> decipheredPasswordDataVOs = doDecipherResult(passwordDataVOs);
-        bindPasswordDataToList(decipheredPasswordDataVOs);
+
+        // we don't want to make unnecessary calls to the server, so place the results in memory
+        applicationModel.setDecipheredPasswordDataVOs(decipheredPasswordDataVOs);
+
+        bindPasswordDataToList(applicationModel.getDecipheredPasswordDataVOs());
 
         //testDecipheredPasswordDataVOs(decipheredPasswordDataVOs);
     }

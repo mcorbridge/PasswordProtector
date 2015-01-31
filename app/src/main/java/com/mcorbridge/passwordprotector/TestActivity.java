@@ -56,7 +56,7 @@ public class TestActivity extends Activity {
 
     public void readFromLocalDatabase(View v){
         passwordsDataSource.open();
-        List<Password> passwords = passwordsDataSource.getAllPasswords();
+        List<Password> passwords = passwordsDataSource.getAllPasswords(true);
         passwordsDataSource.close();
     }
 

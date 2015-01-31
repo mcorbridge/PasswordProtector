@@ -25,6 +25,9 @@ import com.mcorbridge.passwordprotector.sql.Password;
 import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
 import com.mcorbridge.passwordprotector.vo.PasswordDataVO;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 public class UpdateActivity extends Activity implements IPasswordActivity{
 
     PasswordDataVO passwordDataVO;
@@ -196,6 +199,26 @@ public class UpdateActivity extends Activity implements IPasswordActivity{
             updateValueLocalDatabase(id, cty, ttl, vlu, 1, ApplicationConstants.UPDATE);
         }
 
+        //here we add a new password object to the password objects in memory
+        // this is NOT persisted, and is only done to speed up the app
+        // I do this because I intend to add a feature that gives the user the option to NOT store data locally (SQLite) - but we still need the speed
+        if(applicationModel.getDecipheredPasswordDataVOs() != null){
+            System.out.println("****************** update data from object in memory ********************");
+            ArrayList<PasswordDataVO> passwordDataVOs = applicationModel.getDecipheredPasswordDataVOs();
+            Iterator<PasswordDataVO> iterator = passwordDataVOs.iterator();
+            while(iterator.hasNext()){
+                PasswordDataVO passwordDataVO = iterator.next();
+                System.out.println(passwordDataVO.getId() + " == " + id);
+                if(passwordDataVO.getId().equals(id)){
+                    passwordDataVO.setAction(ApplicationConstants.CREATE);
+                    passwordDataVO.setCategory(cty);
+                    passwordDataVO.setTitle(ttl);
+                    passwordDataVO.setValue(vlu);
+                    break;
+                }
+            }
+        }
+
     }
 
     private void deletePasswordData() throws  Exception{
@@ -210,6 +233,23 @@ public class UpdateActivity extends Activity implements IPasswordActivity{
             deleteValueLocalDatabase(id, 0);
         }else{
             deleteValueLocalDatabase(id, 1);
+        }
+
+        //here we add a new password object to the password objects in memory
+        // this is NOT persisted, and is only done to speed up the app
+        // I do this because I intend to add a feature that gives the user the option to NOT store data locally (SQLite) - but we still need the speed
+        if(applicationModel.getDecipheredPasswordDataVOs() != null){
+            System.out.println("****************** flag delete object in memory ********************");
+            ArrayList<PasswordDataVO> passwordDataVOs = applicationModel.getDecipheredPasswordDataVOs();
+            Iterator<PasswordDataVO> iterator = passwordDataVOs.iterator();
+            while(iterator.hasNext()){
+                PasswordDataVO passwordDataVO = iterator.next();
+                System.out.println(passwordDataVO.getId() + " == " + id);
+                if(passwordDataVO.getId().equals(id)){
+                    passwordDataVO.setAction(ApplicationConstants.DELETE);
+                    break;
+                }
+            }
         }
 
     }

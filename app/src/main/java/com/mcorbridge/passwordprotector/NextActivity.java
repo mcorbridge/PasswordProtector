@@ -26,6 +26,9 @@ public class NextActivity extends Activity {
 
         applicationModel = ApplicationModel.getInstance();
 
+        // this value is NOT set to true unless there are zero records in the local database
+        applicationModel.setRequestLocalDatabaseRebuild(false);
+
         pref = getApplicationContext().getSharedPreferences("PasswordProtector", MODE_PRIVATE);
 
         Pair pair = getSharedPreferences();

@@ -1,5 +1,9 @@
 package com.mcorbridge.passwordprotector.model;
 
+import com.mcorbridge.passwordprotector.vo.PasswordDataVO;
+
+import java.util.ArrayList;
+
 /**
  * Created by Mike on 1/12/2015.
  * copyright Michael D. Corbridge
@@ -97,5 +101,16 @@ public class ApplicationModel {
 
     public void setRequestLocalDatabaseRebuild(boolean requestLocalDatabaseRebuild) {
         this.requestLocalDatabaseRebuild = requestLocalDatabaseRebuild;
+    }
+
+    // ----------------------------------------------------------
+    private ArrayList<PasswordDataVO> decipheredPasswordDataVOs;
+
+    public ArrayList<PasswordDataVO> getDecipheredPasswordDataVOs() {
+        return decipheredPasswordDataVOs;
+    }
+
+    public void setDecipheredPasswordDataVOs(ArrayList<PasswordDataVO> decipheredPasswordDataVOs) {
+        this.decipheredPasswordDataVOs = decipheredPasswordDataVOs;
     }
 }

@@ -13,11 +13,15 @@ import android.widget.EditText;
 import com.mcorbridge.passwordprotector.JSON.JsonTask;
 import com.mcorbridge.passwordprotector.PasswordDataActivity;
 import com.mcorbridge.passwordprotector.R;
+import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
 import com.mcorbridge.passwordprotector.encryption.AESEncryption;
 import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.service.ServletPostAsyncTask;
 import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
+import com.mcorbridge.passwordprotector.vo.PasswordDataVO;
+
+import java.util.ArrayList;
 
 public class CreateActivity extends Activity implements IPasswordActivity{
 
@@ -81,7 +85,21 @@ public class CreateActivity extends Activity implements IPasswordActivity{
             postToServlet(jsonRequest); //
             saveToLocalDatabase(JsonTask.getID(),category,title,value,0); // '0' flags this as a value that does NOT need to be synchronized with the cloud
         }else{
-            saveToLocalDatabase(JsonTask.getID(),category,title,value,1); // '1' flags this as a value that MUST be synchronized with the cloud
+            saveToLocalDatabase(JsonTask.getID(), category, title, value, 1); // '1' flags this as a value that MUST be synchronized with the cloud
+        }
+
+        //here we add a new password object to the password objects in memory
+        // this is NOT persisted, and is only done to speed up the app
+        // I do this because I intend to add a feature that gives the user the option to NOT store data locally (SQLite) - but we still need the speed
+        if(applicationModel.getDecipheredPasswordDataVOs() != null){
+            ArrayList<PasswordDataVO> passwordDataVOs = applicationModel.getDecipheredPasswordDataVOs();
+            PasswordDataVO passwordDataVO = new PasswordDataVO();
+            passwordDataVO.setAction(ApplicationConstants.CREATE);
+            passwordDataVO.setId(JsonTask.getID());
+            passwordDataVO.setCategory(category);
+            passwordDataVO.setTitle(title);
+            passwordDataVO.setValue(value);
+            passwordDataVOs.add(passwordDataVO);
         }
 
         Intent intent = new Intent(this, PasswordDataActivity.class);

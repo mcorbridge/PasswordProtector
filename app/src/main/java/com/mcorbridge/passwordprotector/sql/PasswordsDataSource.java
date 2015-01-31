@@ -94,6 +94,28 @@ public class PasswordsDataSource {
         return passwords;
     }
 
+    public List<Password> getAllPasswords(boolean includeDeleted) {
+        List<Password> passwords = new ArrayList<Password>();
+
+        Cursor cursor = database.query(SQLiteHelper.TABLE_PASSWORDS,
+                allColumns,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Password password = cursorToPassword(cursor);
+            passwords.add(password);
+            cursor.moveToNext();
+        }
+        // make sure to close the cursor
+        cursor.close();
+        return passwords;
+    }
+
     public void setPasswordModifiedState(Password password, int state){
         ContentValues newValues = new ContentValues();
         newValues.put(SQLiteHelper.COLUMN_MODIFIED, state); // where state=0, data NOT a candidate for synchronization; state=1, data IS candidate for synchronization
