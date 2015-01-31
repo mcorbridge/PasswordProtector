@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mcorbridge.passwordprotector.JSON.JsonTask;
-import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
 import com.mcorbridge.passwordprotector.create.CreateActivity;
 import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
@@ -196,15 +195,16 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
             Password password = (Password)iterator.next();
             if(password.isModified() == 1){ // this is the 'modified' I was talking about
                 PasswordDataVO passwordDataVO = new PasswordDataVO();
-                if(password.getAction().equals(ApplicationConstants.UPDATE) || password.getAction().equals(ApplicationConstants.DELETE)){
-                    passwordDataVO.setId(password.getPswdID());
-                }
+                passwordDataVO.setId(password.getPswdID()); //watch out for this (and it is my fault) the id IS NOT the same as pswdID <- my bad
                 passwordDataVO.setCategory(password.getCategory());
                 passwordDataVO.setName(password.getName());
                 passwordDataVO.setTitle(password.getTitle());
                 passwordDataVO.setAction(password.getAction());
                 passwordDataVO.setValue(password.getValue());
                 passwordDataVOs.add(passwordDataVO);
+
+                //update the password data in the local database and set password isModified to 0 !!!!
+                setPasswordNotModified(password);
             }
         }
 
@@ -214,8 +214,16 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
         }
 
         if(getNumValuesInLocalDatabase() == 0){
+            System.out.println("****************************  local database is empty ****************************");
+            System.out.println("                              set rebuild flag to TRUE                            ");
             applicationModel.setRequestLocalDatabaseRebuild(true); // flag the app to rebuild the local database
         }
+    }
+
+    private void setPasswordNotModified(Password password){
+        passwordsDataSource.open();
+        passwordsDataSource.setPasswordModifiedState(password, 0);
+        passwordsDataSource.close();
     }
 
     // clean up operation
@@ -239,7 +247,12 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
             return;
         PasswordDataVO passwordDataVO = (PasswordDataVO)pIterator.next();
         // note that the data is already encrypted
-        String jsonRequest = JsonTask.createPreEncryptedJSON(passwordDataVO.getCategory(), passwordDataVO.getTitle(), passwordDataVO.getValue(), passwordDataVO.getId());
+        String jsonRequest = JsonTask.createPreEncryptedJSON(
+                passwordDataVO.getCategory(),
+                passwordDataVO.getTitle(),
+                passwordDataVO.getValue(),
+                passwordDataVO.getAction(),
+                passwordDataVO.getId());
         System.out.println("********************* cloud synchronization *********************");
         System.out.println(jsonRequest);
         postToServlet(jsonRequest);

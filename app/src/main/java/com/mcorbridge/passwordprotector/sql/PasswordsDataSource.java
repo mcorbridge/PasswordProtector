@@ -94,16 +94,17 @@ public class PasswordsDataSource {
         return passwords;
     }
 
-    public void setPasswordModifiedState(Password password){
+    public void setPasswordModifiedState(Password password, int state){
         ContentValues newValues = new ContentValues();
-        newValues.put(SQLiteHelper.COLUMN_MODIFIED, 0); // 0 = not modified, therefore upon update this data will NOT be synchronized
-        database.update(SQLiteHelper.TABLE_PASSWORDS, newValues, "_id=" + password.getId(), null);
+        newValues.put(SQLiteHelper.COLUMN_MODIFIED, state); // where state=0, data NOT a candidate for synchronization; state=1, data IS candidate for synchronization
+        database.update(SQLiteHelper.TABLE_PASSWORDS, newValues, SQLiteHelper.COLUMN_PASSWORD_ID + "=" + password.getPswdID(), null);
     }
 
     public void updatePassword(Password password){
         String strFilter = SQLiteHelper.COLUMN_PASSWORD_ID +"=" + password.getPswdID();
+        System.out.println(password.getPswdID() + " " + password.getAction() + " " + password.getCategory() + " " + password.isModified() + " " + password.getTitle() + " " + password.getValue());
         ContentValues values = new ContentValues();
-        values.put(SQLiteHelper.COLUMN_ACTION, ApplicationConstants.UPDATE);
+        values.put(SQLiteHelper.COLUMN_ACTION, password.getAction());
         values.put(SQLiteHelper.COLUMN_CATEGORY, password.getCategory());
         values.put(SQLiteHelper.COLUMN_MODIFIED, password.isModified());
         values.put(SQLiteHelper.COLUMN_TITLE, password.getTitle());

@@ -2,6 +2,7 @@ package com.mcorbridge.passwordprotector;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -88,6 +89,9 @@ public class MainActivity extends Activity {
     }
 
     public void doNext(){
+        MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.whoosh);
+        mediaPlayer.start();
+
         Intent intent = new Intent(this, NextActivity.class);
         startActivity(intent);
     }

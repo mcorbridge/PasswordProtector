@@ -13,14 +13,16 @@
         android:text="Email"
         android:id="@+id/textViewEmail"
         android:layout_marginLeft="50dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="20dp"/>
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:id="@+id/editTextEmail"
         android:inputType="textEmailAddress"
         android:hint="Input email"
+        android:padding="10dp"
+        android:background="@drawable/textborder"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="70dp"/>
 
@@ -34,18 +36,22 @@
         android:layout_marginTop="150dp"/>
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:id="@+id/editTextQuestion"
         android:hint="Ask a question"
+        android:padding="10dp"
+        android:background="@drawable/textborder"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="200dp"/>
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:id="@+id/editTextAnswer"
         android:hint="Answer that question"
+        android:padding="10dp"
+        android:background="@drawable/textborder"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="250dp"/>
 

@@ -29,6 +29,7 @@ public class NextActivity extends Activity {
         pref = getApplicationContext().getSharedPreferences("PasswordProtector", MODE_PRIVATE);
 
         Pair pair = getSharedPreferences();
+
         if(pair.first == null || pair.second == null){
             System.out.println("You must input your shared preferences!");
             Intent intent = new Intent(this, PassPhraseActivity.class);

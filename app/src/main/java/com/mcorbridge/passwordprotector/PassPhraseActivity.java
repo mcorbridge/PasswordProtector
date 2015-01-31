@@ -27,7 +27,6 @@ import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//TODO fix formatting on the passPhrase page
 public class PassPhraseActivity extends Activity {
 
     private CountDownTimer countDownTimer;
@@ -37,7 +36,7 @@ public class PassPhraseActivity extends Activity {
 
     public SharedPreferences pref;
 
-    ApplicationModel applicationModel = ApplicationModel.getInstance();
+    private ApplicationModel applicationModel = ApplicationModel.getInstance();
 
     private PasswordsDataSource passwordsDataSource;
 
@@ -178,6 +177,7 @@ public class PassPhraseActivity extends Activity {
         popup.showAtLocation(layout,Gravity.NO_GRAVITY,0,170);
 
         // Getting a reference to Close button, and close the popup when clicked.
+        //todo the submit button on the popup has a transparency that makes the button hard to see?
         Button close = (Button) layout.findViewById(R.id.close);
         close.setOnClickListener(new View.OnClickListener() {
 

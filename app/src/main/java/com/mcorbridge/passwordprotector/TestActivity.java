@@ -85,6 +85,7 @@ public class TestActivity extends Activity {
     }
 
     public void clearDatabase(View v){
+        System.out.println("**************************** delete all values in local database ****************************");
         passwordsDataSource.open();
         passwordsDataSource.deleteLocalPasswordData();
         passwordsDataSource.close();

@@ -124,6 +124,7 @@ public class ReadActivity extends Activity implements IPasswordActivity{
     }
 
     public void processResults(String results){
+        System.out.println("--> " + results);
         progressBar.setVisibility(View.INVISIBLE);
         Gson gson = new Gson();
         final PasswordDataVO[] passwordDataVOs = gson.fromJson(results, PasswordDataVO[].class);
@@ -133,6 +134,9 @@ public class ReadActivity extends Activity implements IPasswordActivity{
         if(applicationModel.isRequestLocalDatabaseRebuild()){
             new Thread(new Runnable() {
                 public void run() {
+                    System.out.println("**************************** copying all cloud data into local database ****************************");
+                    System.out.println("                                   set rebuild flag to FALSE                                        ");
+                    applicationModel.setRequestLocalDatabaseRebuild(false);
                     rebuildLocalDatabase(passwordDataVOs);
                 }
             }).start();

@@ -188,11 +188,12 @@ public class UpdateActivity extends Activity implements IPasswordActivity{
         Long id = passwordDataVO.getId();
 
         if(applicationModel.getIsDataConnected()){
-            String jsonRequest = JsonTask.createUpdateJSON(cty, ttl, vlu, id);
+            String jsonRequest = JsonTask.updateJSON(cty, ttl, vlu, id);
             new ServletPostAsyncTask().execute(new Pair<Context, String>(this, jsonRequest));
-            updateValueLocalDatabase(id, cty, ttl, vlu, 0);
+            // although this a password UPDATE, the action is set to CREATE since both the cloud and local versions are updated simultaneously
+            updateValueLocalDatabase(id, cty, ttl, vlu, 0, ApplicationConstants.CREATE);
         }else{
-            updateValueLocalDatabase(id, cty, ttl, vlu, 1);
+            updateValueLocalDatabase(id, cty, ttl, vlu, 1, ApplicationConstants.UPDATE);
         }
 
     }
@@ -204,7 +205,7 @@ public class UpdateActivity extends Activity implements IPasswordActivity{
         Long id = passwordDataVO.getId();
 
         if(applicationModel.getIsDataConnected()){
-            String jsonRequest = JsonTask.createDeleteJSON(cty, ttl, vlu, id);
+            String jsonRequest = JsonTask.deleteJSON(cty, ttl, vlu, id);
             new ServletPostAsyncTask().execute(new Pair<Context, String>(this, jsonRequest));
             deleteValueLocalDatabase(id, 0);
         }else{
@@ -213,11 +214,11 @@ public class UpdateActivity extends Activity implements IPasswordActivity{
 
     }
 
-    private void updateValueLocalDatabase(Long id, String category, String title, String value, int modified)throws Exception{
+    private void updateValueLocalDatabase(Long id, String category, String title, String value, int modified, String action)throws Exception{
         passwordsDataSource.open();
         Password password = new Password();
         String cipher = applicationModel.getCipher();
-        password.setAction(ApplicationConstants.UPDATE);
+        password.setAction(action);
         password.setCategory(AESEncryption.cipher(cipher, category));
         password.setTitle(AESEncryption.cipher(cipher, title));
         password.setValue(AESEncryption.cipher(cipher, value));
