@@ -1,6 +1,5 @@
 package com.mcorbridge.passwordprotector;
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Color;
@@ -26,7 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class VisualKeyActivity extends Activity implements OnTouchListener, OnDragListener {
+public class VisualKeyActivity extends BaseActivity implements OnTouchListener, OnDragListener {
 
     private ViewGroup from;
     private int aResourceIds[] = new int[4];
@@ -60,28 +59,38 @@ public class VisualKeyActivity extends Activity implements OnTouchListener, OnDr
         setResourceIdArray();
 
         addBorder();
+
+        // null the in-memory deciphered password data
+        // when a user returns to the key from an ongoing session, then inputs an incorrect visual key
+        // the in-memory data must be null or all previously deciphered data will be accessible
+        applicationModel.setDecipheredPasswordDataVOs(null);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        super.onOptionsItemSelected(item);
+        return true;
+    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(this, MainActivity.class));
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+        finish();
+    }
 
-        return super.onOptionsItemSelected(item);
+    @Override
+    protected void onStop(){
+        super.onStop();
+        doReset();
     }
 
     @Override
@@ -311,6 +320,27 @@ public class VisualKeyActivity extends Activity implements OnTouchListener, OnDr
     }
 
     public void doReset(View v){
+        Iterator it = hashMap.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pairs = (Map.Entry)it.next();
+            //System.out.println(pairs.getKey() + " = " + pairs.getValue());
+            RelativeLayout to = (RelativeLayout)pairs.getKey();
+            ImageView from = (ImageView)pairs.getValue();
+            to.removeView(from);
+            to.setBackgroundColor(getResources().getColor(R.color.grey));
+            it.remove(); // avoids a ConcurrentModificationException
+        }
+
+        addBorder();
+
+        numDrops = 0;
+        visualCipherKey = "";
+    }
+
+    /**
+     * called upon the activity onStop event
+     */
+    public void doReset(){
         Iterator it = hashMap.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry)it.next();

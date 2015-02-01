@@ -1,9 +1,9 @@
 package com.mcorbridge.passwordprotector.update;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.TextKeyListener;
 import android.util.Pair;
@@ -12,9 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.mcorbridge.passwordprotector.BaseActivity;
 import com.mcorbridge.passwordprotector.JSON.JsonTask;
+import com.mcorbridge.passwordprotector.PasswordDataActivity;
 import com.mcorbridge.passwordprotector.R;
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
 import com.mcorbridge.passwordprotector.encryption.AESEncryption;
@@ -28,7 +31,7 @@ import com.mcorbridge.passwordprotector.vo.PasswordDataVO;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class UpdateActivity extends Activity implements IPasswordActivity{
+public class UpdateActivity extends BaseActivity implements IPasswordActivity{
 
     PasswordDataVO passwordDataVO;
     EditText category;
@@ -110,24 +113,14 @@ public class UpdateActivity extends Activity implements IPasswordActivity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_update, menu);
+        super.onCreateOptionsMenu(menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        super.onOptionsItemSelected(item);
+        return true;
     }
 
     private void setEditTextFields(){
@@ -140,6 +133,10 @@ public class UpdateActivity extends Activity implements IPasswordActivity{
         value.setText(passwordDataVO.getValue());
     }
 
+    /**
+     *
+     * @param v
+     */
     public void doModify(View v){
         new AlertDialog.Builder(this)
                 .setTitle("Alert")
@@ -162,6 +159,10 @@ public class UpdateActivity extends Activity implements IPasswordActivity{
                 .show();
     }
 
+    /**
+     *
+     * @param v
+     */
     public void doDelete(View v){
         new AlertDialog.Builder(this)
                 .setTitle("Alert")
@@ -184,6 +185,10 @@ public class UpdateActivity extends Activity implements IPasswordActivity{
                 .show();
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     private void modifyPasswordData() throws  Exception{
         String cty = category.getText().toString();
         String ttl = title.getText().toString();
@@ -199,28 +204,14 @@ public class UpdateActivity extends Activity implements IPasswordActivity{
             updateValueLocalDatabase(id, cty, ttl, vlu, 1, ApplicationConstants.UPDATE);
         }
 
-        //here we add a new password object to the password objects in memory
-        // this is NOT persisted, and is only done to speed up the app
-        // I do this because I intend to add a feature that gives the user the option to NOT store data locally (SQLite) - but we still need the speed
-        if(applicationModel.getDecipheredPasswordDataVOs() != null){
-            System.out.println("****************** update data from object in memory ********************");
-            ArrayList<PasswordDataVO> passwordDataVOs = applicationModel.getDecipheredPasswordDataVOs();
-            Iterator<PasswordDataVO> iterator = passwordDataVOs.iterator();
-            while(iterator.hasNext()){
-                PasswordDataVO passwordDataVO = iterator.next();
-                System.out.println(passwordDataVO.getId() + " == " + id);
-                if(passwordDataVO.getId().equals(id)){
-                    passwordDataVO.setAction(ApplicationConstants.CREATE);
-                    passwordDataVO.setCategory(cty);
-                    passwordDataVO.setTitle(ttl);
-                    passwordDataVO.setValue(vlu);
-                    break;
-                }
-            }
-        }
+        modifyPasswordDataInMemory(id, cty, ttl, vlu, ApplicationConstants.CREATE);
 
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     private void deletePasswordData() throws  Exception{
         String cty = category.getText().toString();
         String ttl = title.getText().toString();
@@ -235,13 +226,36 @@ public class UpdateActivity extends Activity implements IPasswordActivity{
             deleteValueLocalDatabase(id, 1);
         }
 
-        //here we add a new password object to the password objects in memory
-        // this is NOT persisted, and is only done to speed up the app
-        // I do this because I intend to add a feature that gives the user the option to NOT store data locally (SQLite) - but we still need the speed
-        if(applicationModel.getDecipheredPasswordDataVOs() != null){
-            System.out.println("****************** flag delete object in memory ********************");
-            ArrayList<PasswordDataVO> passwordDataVOs = applicationModel.getDecipheredPasswordDataVOs();
-            Iterator<PasswordDataVO> iterator = passwordDataVOs.iterator();
+        modifyPasswordDataInMemory(id, null, null, null, ApplicationConstants.DELETE);
+
+    }
+
+    /**
+     * here we add a new password object to the password objects in memory
+     * this is NOT persisted, and is only done to speed up the app
+     * I do this because I intend to add a feature that gives the user the option to NOT store data locally (SQLite) - but we still need the speed
+     * @param id
+     * @param category
+     * @param title
+     * @param value
+     * @param action
+     */
+    private void modifyPasswordDataInMemory(Long id, String category, String title, String value, String action){
+        ArrayList<PasswordDataVO> passwordDataVOs = applicationModel.getDecipheredPasswordDataVOs();
+        Iterator<PasswordDataVO> iterator = passwordDataVOs.iterator();
+        if(action == ApplicationConstants.CREATE){
+            while(iterator.hasNext()){
+                PasswordDataVO passwordDataVO = iterator.next();
+                System.out.println(passwordDataVO.getId() + " == " + id);
+                if(passwordDataVO.getId().equals(id)){
+                    passwordDataVO.setAction(ApplicationConstants.CREATE);
+                    passwordDataVO.setCategory(category);
+                    passwordDataVO.setTitle(title);
+                    passwordDataVO.setValue(value);
+                    break;
+                }
+            }
+        }else{
             while(iterator.hasNext()){
                 PasswordDataVO passwordDataVO = iterator.next();
                 System.out.println(passwordDataVO.getId() + " == " + id);
@@ -252,8 +266,20 @@ public class UpdateActivity extends Activity implements IPasswordActivity{
             }
         }
 
+        Intent intent = new Intent(this, PasswordDataActivity.class);
+        startActivity(intent);
     }
 
+    /**
+     *
+     * @param id
+     * @param category
+     * @param title
+     * @param value
+     * @param modified
+     * @param action
+     * @throws Exception
+     */
     private void updateValueLocalDatabase(Long id, String category, String title, String value, int modified, String action)throws Exception{
         passwordsDataSource.open();
         Password password = new Password();
@@ -268,6 +294,12 @@ public class UpdateActivity extends Activity implements IPasswordActivity{
         passwordsDataSource.close();
     }
 
+    /**
+     *
+     * @param id
+     * @param modified
+     * @throws Exception
+     */
     private void deleteValueLocalDatabase(Long id, int modified)throws Exception{
         passwordsDataSource.open();
         Password password = new Password();
@@ -278,7 +310,13 @@ public class UpdateActivity extends Activity implements IPasswordActivity{
         passwordsDataSource.close();
     }
 
+    /**
+     *
+     * @param results
+     */
     public void processResults(String results){
         System.out.println(results);
+        Toast.makeText(getApplicationContext(), results,
+                Toast.LENGTH_LONG).show();
     }
 }

@@ -1,6 +1,5 @@
 package com.mcorbridge.passwordprotector;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,7 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class PasswordDataActivity extends Activity implements IPasswordActivity{
+public class PasswordDataActivity extends BaseActivity implements IPasswordActivity{
 
     private ApplicationModel applicationModel;
     private PasswordsDataSource passwordsDataSource;
@@ -60,24 +59,14 @@ public class PasswordDataActivity extends Activity implements IPasswordActivity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_read_password, menu);
+        super.onCreateOptionsMenu(menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        super.onOptionsItemSelected(item);
+        return true;
     }
 
     public void alertServletEndpoint(String servletEndPoint){

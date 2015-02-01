@@ -23,17 +23,17 @@
         EXACT same question and answer.  I am asking you to remember that much.  If you forget that EXACT question and answer,
         your data is forever encrypted.  I cannot help you, the NSA cannot help you, even the script kiddie in Eastern Bulgaria
         cannot help you.  If I get granted unlimited access to the newest quantum computers, I might be able to recover your data, but don\'t count on it.\n\n</string>
-
     <string name="title_activity_read_password">ReadPasswordActivity</string>
     <string name="title_activity_create">CreateActivity</string>
     <string name="title_activity_read">ReadActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_test">Test Activity</string>
+    <string name="action_home">Home</string>
     <string name="title_activity_update">UpdateActivity</string>
     <string name="title_activity_sql">SQLActivity</string>
     <string name="title_activity_test">TestActivity</string>
-
     <string name="info_update">"You are about to modify password information\nIs this what you want to do?"</string>
     <string name="info_delete">"You are about to delete password information\nIs this what you want to do?"</string>
+    <string name="title_activity_base">BaseActivity</string>
 
 </resources>

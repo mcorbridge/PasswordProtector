@@ -27,7 +27,7 @@ import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PassPhraseActivity extends Activity {
+public class PassPhraseActivity extends BaseActivity {
 
     private CountDownTimer countDownTimer;
     private String question;
@@ -55,25 +55,14 @@ public class PassPhraseActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu);
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        super.onOptionsItemSelected(item);
+        return true;
     }
 
 
