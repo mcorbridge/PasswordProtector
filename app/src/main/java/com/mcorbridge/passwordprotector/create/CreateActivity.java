@@ -99,7 +99,7 @@ public class CreateActivity extends BaseActivity implements IPasswordActivity{
     private void saveToLocalDatabase(Long id, String category, String title, String value, int modified)throws Exception{
         passwordsDataSource.open();
         String cipher = applicationModel.getCipher();
-        String action = "create"; // the action is not encrypted
+        String action = ApplicationConstants.CREATE; // the action is not encrypted
         category = AESEncryption.cipher(cipher,category);
         title = AESEncryption.cipher(cipher,title);
         value = AESEncryption.cipher(cipher,value);
