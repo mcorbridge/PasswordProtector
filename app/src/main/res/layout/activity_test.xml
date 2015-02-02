@@ -43,5 +43,13 @@
         android:layout_marginTop="180dp"
         android:onClick="clearDatabase"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="clear lockout"
+        android:id="@+id/button4"
+        android:layout_marginTop="230dp"
+        android:onClick="clearLockOut"/>
+
 
 </RelativeLayout>

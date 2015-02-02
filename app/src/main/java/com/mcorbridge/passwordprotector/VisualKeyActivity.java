@@ -1,7 +1,10 @@
 package com.mcorbridge.passwordprotector;
 
+import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
@@ -19,8 +22,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -38,6 +43,7 @@ public class VisualKeyActivity extends BaseActivity implements OnTouchListener, 
     private RelativeLayout relativeLayout4;
     private HashMap hashMap = new HashMap();
     private ApplicationModel applicationModel = ApplicationModel.getInstance();
+    private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +51,8 @@ public class VisualKeyActivity extends BaseActivity implements OnTouchListener, 
         setContentView(R.layout.activity_visual_key);
 
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+
+        pref = getApplicationContext().getSharedPreferences("PasswordProtector", MODE_PRIVATE);
 
         findViewById(R.id.red_square).setOnTouchListener(this);
         findViewById(R.id.yellow_square).setOnTouchListener(this);
@@ -64,6 +72,22 @@ public class VisualKeyActivity extends BaseActivity implements OnTouchListener, 
         // when a user returns to the key from an ongoing session, then inputs an incorrect visual key
         // the in-memory data must be null or all previously deciphered data will be accessible
         applicationModel.setDecipheredPasswordDataVOs(null);
+
+        //if the app recognises that there have been 5 incorrect attempts at the visual key, the user is locked out for 8 hrs
+        if(getLockOut()){
+            final Intent intent = new Intent(this,MainActivity.class);
+            new AlertDialog.Builder(this)
+                    .setTitle("Alert")
+                    .setMessage(R.string.lock_out_msg)
+                    .setIcon(R.drawable.alert_icon)
+                    .setPositiveButton("Ok, got it.", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(intent );
+                        }
+                    })
+                    .show();
+            }
+
     }
 
     @Override
@@ -356,6 +380,31 @@ public class VisualKeyActivity extends BaseActivity implements OnTouchListener, 
 
         numDrops = 0;
         visualCipherKey = "";
+    }
+
+    private boolean getLockOut(){
+        boolean isLockedOut = false;
+        String lockOutTime = pref.getString("lockout_time", null);
+
+        if(lockOutTime != null){
+            Long lockOutTimeMilli = Long.valueOf(lockOutTime).longValue();
+            Calendar calendar = Calendar.getInstance();
+            Long timeNowMilli = calendar.getTimeInMillis();
+            Long diff = timeNowMilli - lockOutTimeMilli;
+            if(diff < ApplicationConstants.MILLI_PER_EIGHT_HR){
+                isLockedOut = true;
+            }else{
+                isLockedOut = false;
+                setSharedPreferences("lockout_time",null);
+            }
+        }
+        return isLockedOut;
+    }
+
+    private void setSharedPreferences(String key, String type){
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(type, key);  // Saving string
+        editor.apply(); // commit changes
     }
 
 }

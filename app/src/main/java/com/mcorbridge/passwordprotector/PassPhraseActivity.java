@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
 import com.mcorbridge.passwordprotector.encryption.AESEncryption;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
@@ -80,11 +81,11 @@ public class PassPhraseActivity extends BaseActivity {
         }
 
         // email
-        applicationModel.setEmail(AESEncryption.cipher(applicationModel.APPLICATION_SECRET_KEY, email));
+        applicationModel.setEmail(AESEncryption.cipher(ApplicationConstants.APPLICATION_SECRET_KEY, email));
 
         // question and answer
         String concat = question.concat(answer);
-        String cipher = AESEncryption.cipher(applicationModel.APPLICATION_SECRET_KEY, concat);
+        String cipher = AESEncryption.cipher(ApplicationConstants.APPLICATION_SECRET_KEY, concat);
 
         // create secret key
         String reverse = new StringBuilder(cipher).reverse().toString();

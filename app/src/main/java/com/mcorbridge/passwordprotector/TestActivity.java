@@ -1,5 +1,6 @@
 package com.mcorbridge.passwordprotector;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +18,7 @@ public class TestActivity extends BaseActivity {
 
     private ApplicationModel applicationModel;
     private PasswordsDataSource passwordsDataSource;
+    private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,8 @@ public class TestActivity extends BaseActivity {
 
         // for offline data work
         passwordsDataSource = new PasswordsDataSource(getApplicationContext());
+
+        pref = getApplicationContext().getSharedPreferences("PasswordProtector", MODE_PRIVATE);
 
     }
 
@@ -78,6 +82,13 @@ public class TestActivity extends BaseActivity {
         passwordsDataSource.open();
         passwordsDataSource.deleteLocalPasswordData();
         passwordsDataSource.close();
+    }
+
+    public void clearLockOut(View v){
+        System.out.println("**************************** set lockout time to null ****************************");
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("lockout_time", null);  // Saving string
+        editor.apply(); // commit changes
     }
 
 }

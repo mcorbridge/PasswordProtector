@@ -3,6 +3,7 @@ package com.mcorbridge.passwordprotector.model;
 import com.mcorbridge.passwordprotector.vo.PasswordDataVO;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Mike on 1/12/2015.
@@ -29,7 +30,7 @@ public class ApplicationModel {
 
     // ----------------------------------------------------------
 
-    public static final String APPLICATION_SECRET_KEY = "bostonBruins";
+
 
     // ----------------------------------------------------------
 
@@ -113,4 +114,26 @@ public class ApplicationModel {
     public void setDecipheredPasswordDataVOs(ArrayList<PasswordDataVO> decipheredPasswordDataVOs) {
         this.decipheredPasswordDataVOs = decipheredPasswordDataVOs;
     }
+
+    // ----------------------------------------------------------
+    private int incorrectDecipherAttempts;
+
+    public int getIncorrectDecipherAttempts() {
+        return incorrectDecipherAttempts;
+    }
+
+    public void setIncorrectDecipherAttempts(int incorrectDecipherAttempts) {
+        this.incorrectDecipherAttempts = incorrectDecipherAttempts;
+    }
+
+    // ----------------------------------------------------------
+    public Date getLockoutDate() {
+        return lockoutDate;
+    }
+
+    public void setLockoutDate(Date lockoutDate) {
+        this.lockoutDate = lockoutDate;
+    }
+
+    private Date lockoutDate;
 }

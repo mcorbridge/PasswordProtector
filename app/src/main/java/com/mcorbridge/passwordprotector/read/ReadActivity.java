@@ -17,7 +17,9 @@ import com.mcorbridge.passwordprotector.BaseActivity;
 import com.mcorbridge.passwordprotector.JSON.JsonTask;
 import com.mcorbridge.passwordprotector.R;
 import com.mcorbridge.passwordprotector.adapters.CustomAdapter;
+import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
 import com.mcorbridge.passwordprotector.encryption.AESEncryption;
+import com.mcorbridge.passwordprotector.error.DecipherErrorActivity;
 import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.service.ServletPostAsyncTask;
@@ -180,19 +182,21 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
                 startActivity(intent);
             }
         });
+
+        //because the data was deciphered correctly, the visual key attempts is set back to 0
+        applicationModel.setIncorrectDecipherAttempts(0);
     }
 
     /**
-     * At least one passwordData was created offline, and this value has been uploaded to cloud storage.
-     * As a result of this, all records in the local (offline) database have been deleted.
-     * This method will rebuild the local database from the most up-to-date records from the cloud
+     * If all records in the local (offline) database have been deleted,
+     * this method will rebuild the local database from the most up-to-date records from the cloud
      * @param passwordDataVOs
      */
     private void rebuildLocalDatabase(PasswordDataVO[] passwordDataVOs){
         passwordsDataSource.open();
         for (int n=0;n<passwordDataVOs.length;n++){
             PasswordDataVO passwordDataVO = passwordDataVOs[n];
-            String action = "create";
+            String action = ApplicationConstants.CREATE;
             Long id = passwordDataVO.getId();
             String category = passwordDataVO.getCategory();
             String title = passwordDataVO.getTitle();
@@ -216,7 +220,9 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
                 decipheredPasswordDataVOs.add(passwordDataVO);
             }
         } catch (Exception e) {
+            // the decipher will fail if the pass phrase question/answer OR visual key are INCORRECT!
             System.out.println("decipher error");
+            startActivity(new Intent(this, DecipherErrorActivity.class));
         }
         return decipheredPasswordDataVOs;
     }
