@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.mcorbridge.passwordprotector.create.CreateActivity;
+import com.mcorbridge.passwordprotector.read.ReadActivity;
+
 
 public class BaseActivity extends Activity {
 
@@ -33,6 +36,16 @@ public class BaseActivity extends Activity {
 
             case R.id.action_home:
                 intent = new Intent(this,MainActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.action_create:
+                intent = new Intent(this,CreateActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.action_read:
+                intent = new Intent(this,ReadActivity.class);
                 startActivity(intent);
                 break;
         }

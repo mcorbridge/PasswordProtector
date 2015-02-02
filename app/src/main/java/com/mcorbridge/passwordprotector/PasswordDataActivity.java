@@ -23,7 +23,6 @@ import com.mcorbridge.passwordprotector.read.ReadActivity;
 import com.mcorbridge.passwordprotector.service.ServletPostAsyncTask;
 import com.mcorbridge.passwordprotector.sql.Password;
 import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
-import com.mcorbridge.passwordprotector.sql.SQLActivity;
 import com.mcorbridge.passwordprotector.vo.PasswordDataVO;
 
 import java.lang.reflect.Method;
@@ -53,6 +52,10 @@ public class PasswordDataActivity extends BaseActivity implements IPasswordActiv
 
         //offline-online mode check for wifi and/or data over telecom
         checkMobileDataConnectivity();
+
+        //take user directly to the read activity
+        Intent intent = new Intent(this, ReadActivity.class);
+        startActivity(intent);
 
     }
 
@@ -138,7 +141,7 @@ public class PasswordDataActivity extends BaseActivity implements IPasswordActiv
         // go to offline mode IF there is no data connection
         if(!netInfo.isConnected() && !mobileDataEnabled && !isWifiAuthenticated){
             applicationModel.setIsDataConnected(false);
-            final Intent intent = new Intent(this, SQLActivity.class);
+
             new AlertDialog.Builder(this)
                     .setTitle("Alert")
                     .setMessage("You do not have a data connection.\nThe application will continue in offline mode.\nAll offline changes will be synchronized with the cloud when you next connect.")

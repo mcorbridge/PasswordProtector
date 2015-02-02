@@ -29,6 +29,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_test">Test Activity</string>
     <string name="action_home">Home</string>
+    <string name="action_create">Create New</string>
+    <string name="action_read">Get Passwords</string>
     <string name="title_activity_update">UpdateActivity</string>
     <string name="title_activity_sql">SQLActivity</string>
     <string name="title_activity_test">TestActivity</string>

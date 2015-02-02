@@ -38,7 +38,7 @@ public class DecipherErrorActivity extends BaseActivity {
             final Intent intent = new Intent(this,MainActivity.class);
             new AlertDialog.Builder(this)
                     .setTitle("Alert")
-                    .setMessage("There have been " + applicationModel.getIncorrectDecipherAttempts() + "attempted logins.\n\nThe app will locked for 8hrs. if there are more than 5 incorrect login attempts.")
+                    .setMessage("There have been\n ------>  " + applicationModel.getIncorrectDecipherAttempts() + "\nattempted logins.\n\nThe app will locked for 8 hrs. IF there are more than 5 incorrect login attempts.")
                     .setIcon(R.drawable.alert_icon)
                     .setPositiveButton("Ok, got it.", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {

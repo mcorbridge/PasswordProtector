@@ -1,6 +1,8 @@
 package com.mcorbridge.passwordprotector.read;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Pair;
@@ -57,12 +59,17 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        if(!applicationModel.getIsDataConnected()){
+            showNotConnectedDialog();
+        }
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
+        menu.getItem(2).setVisible(false);
         return true;
     }
 
@@ -184,7 +191,7 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
         });
 
         //because the data was deciphered correctly, the visual key attempts is set back to 0
-        applicationModel.setIncorrectDecipherAttempts(0);
+        //applicationModel.setIncorrectDecipherAttempts(0);
     }
 
     /**
@@ -240,5 +247,18 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
                     "(value) " + passwordDataVO.getValue()
             );
         }
+    }
+
+    private void showNotConnectedDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle("Alert")
+                .setMessage("You do not have a data connection.\nThe application will continue in offline mode.\nAll offline changes will be synchronized with the cloud when you next connect.")
+                .setIcon(R.drawable.alert_icon)
+                .setPositiveButton("Ok, got it", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //startActivity(intent);
+                    }
+                })
+                .show();
     }
 }

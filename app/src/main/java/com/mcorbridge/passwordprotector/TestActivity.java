@@ -89,6 +89,7 @@ public class TestActivity extends BaseActivity {
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("lockout_time", null);  // Saving string
         editor.apply(); // commit changes
+        applicationModel.setIncorrectDecipherAttempts(0);
     }
 
 }

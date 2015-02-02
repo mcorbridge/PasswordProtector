@@ -45,6 +45,10 @@ public class CreateActivity extends BaseActivity implements IPasswordActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
+        menu.getItem(0).setVisible(true);
+        menu.getItem(1).setVisible(false);
+        menu.getItem(2).setVisible(true);
+        menu.getItem(3).setVisible(false);
         return true;
     }
 
