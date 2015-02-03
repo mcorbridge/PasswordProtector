@@ -23,7 +23,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
-import com.mcorbridge.passwordprotector.model.ApplicationModel;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -42,7 +41,6 @@ public class VisualKeyActivity extends BaseActivity implements OnTouchListener, 
     private RelativeLayout relativeLayout3;
     private RelativeLayout relativeLayout4;
     private HashMap hashMap = new HashMap();
-    private ApplicationModel applicationModel = ApplicationModel.getInstance();
     private SharedPreferences pref;
 
     @Override

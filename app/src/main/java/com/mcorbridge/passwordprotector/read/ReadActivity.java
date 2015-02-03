@@ -20,10 +20,10 @@ import com.mcorbridge.passwordprotector.JSON.JsonTask;
 import com.mcorbridge.passwordprotector.R;
 import com.mcorbridge.passwordprotector.adapters.CustomAdapter;
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
+import com.mcorbridge.passwordprotector.create.CreateActivity;
 import com.mcorbridge.passwordprotector.encryption.AESEncryption;
 import com.mcorbridge.passwordprotector.error.DecipherErrorActivity;
 import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
-import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.service.ServletPostAsyncTask;
 import com.mcorbridge.passwordprotector.sql.Password;
 import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
@@ -36,7 +36,6 @@ import java.util.List;
 
 public class ReadActivity extends BaseActivity implements IPasswordActivity{
 
-    private ApplicationModel applicationModel;
     private ProgressBar progressBar;
     private PasswordsDataSource passwordsDataSource;
 
@@ -47,7 +46,6 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
 
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
 
-        applicationModel = ApplicationModel.getInstance();
 
         // for offline data work
         passwordsDataSource = new PasswordsDataSource(getApplicationContext());
@@ -150,6 +148,13 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
         progressBar.setVisibility(View.INVISIBLE);
         Gson gson = new Gson();
         final PasswordDataVO[] passwordDataVOs = gson.fromJson(results, PasswordDataVO[].class);
+
+        // take user directly to create if they are new and have not created any records
+        if(passwordDataVOs.length == 0){
+            startActivity(new Intent(this, CreateActivity.class));
+            applicationModel.setNewUser(true);
+            return;
+        }
 
         //rebuild the local database IF it needs to be restored
         // and do it inside a new thread

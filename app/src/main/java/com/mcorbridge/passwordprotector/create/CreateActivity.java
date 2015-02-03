@@ -1,6 +1,8 @@
 package com.mcorbridge.passwordprotector.create;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Pair;
@@ -16,7 +18,6 @@ import com.mcorbridge.passwordprotector.R;
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
 import com.mcorbridge.passwordprotector.encryption.AESEncryption;
 import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
-import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.service.ServletPostAsyncTask;
 import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
 import com.mcorbridge.passwordprotector.vo.PasswordDataVO;
@@ -25,7 +26,6 @@ import java.util.ArrayList;
 
 public class CreateActivity extends BaseActivity implements IPasswordActivity{
 
-    private ApplicationModel applicationModel;
     private PasswordsDataSource passwordsDataSource;
 
     @Override
@@ -38,7 +38,19 @@ public class CreateActivity extends BaseActivity implements IPasswordActivity{
         // for offline data work
         passwordsDataSource = new PasswordsDataSource(getApplicationContext());
 
-        applicationModel = ApplicationModel.getInstance();
+        if(applicationModel.isNewUser()){
+            new AlertDialog.Builder(this)
+                    .setTitle("Alert")
+                    .setMessage("Welcome!\nYou are a new user.")
+                    .setIcon(R.drawable.alert_icon)
+                    .setPositiveButton("Thanks", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+// stub
+                        }
+                    })
+                    .show();
+        }
+
     }
 
 

@@ -22,7 +22,6 @@ import android.widget.PopupWindow;
 
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
 import com.mcorbridge.passwordprotector.encryption.AESEncryption;
-import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.practice.PracticeActivity;
 import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
 
@@ -38,8 +37,6 @@ public class PassPhraseActivity extends BaseActivity {
     private String email;
 
     public SharedPreferences pref;
-
-    private ApplicationModel applicationModel = ApplicationModel.getInstance();
 
     private PasswordsDataSource passwordsDataSource;
 

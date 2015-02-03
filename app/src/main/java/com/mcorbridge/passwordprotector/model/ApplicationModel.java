@@ -127,6 +127,8 @@ public class ApplicationModel {
     }
 
     // ----------------------------------------------------------
+    private Date lockoutDate;
+
     public Date getLockoutDate() {
         return lockoutDate;
     }
@@ -135,5 +137,14 @@ public class ApplicationModel {
         this.lockoutDate = lockoutDate;
     }
 
-    private Date lockoutDate;
+    // ----------------------------------------------------------
+    private boolean isNewUser;
+
+    public boolean isNewUser() {
+        return isNewUser;
+    }
+
+    public void setNewUser(boolean isNewUser) {
+        this.isNewUser = isNewUser;
+    }
 }

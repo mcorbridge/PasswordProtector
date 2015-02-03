@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mcorbridge.passwordprotector.JSON.JsonTask;
-import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.sql.Password;
 import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
 
@@ -16,7 +15,6 @@ import java.util.List;
 
 public class TestActivity extends BaseActivity {
 
-    private ApplicationModel applicationModel;
     private PasswordsDataSource passwordsDataSource;
     private SharedPreferences pref;
 
@@ -24,8 +22,6 @@ public class TestActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-
-        applicationModel = ApplicationModel.getInstance();
 
         // for offline data work
         passwordsDataSource = new PasswordsDataSource(getApplicationContext());

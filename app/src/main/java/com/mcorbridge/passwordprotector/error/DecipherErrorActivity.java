@@ -11,13 +11,11 @@ import android.view.MenuItem;
 import com.mcorbridge.passwordprotector.BaseActivity;
 import com.mcorbridge.passwordprotector.MainActivity;
 import com.mcorbridge.passwordprotector.R;
-import com.mcorbridge.passwordprotector.model.ApplicationModel;
 
 import java.util.Calendar;
 
 public class DecipherErrorActivity extends BaseActivity {
 
-    private ApplicationModel applicationModel = ApplicationModel.getInstance();
     private SharedPreferences pref;
 
     @Override

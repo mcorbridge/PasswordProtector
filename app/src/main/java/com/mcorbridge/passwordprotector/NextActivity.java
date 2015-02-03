@@ -7,14 +7,10 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.mcorbridge.passwordprotector.model.ApplicationModel;
-
 
 public class NextActivity extends BaseActivity {
 
     public SharedPreferences pref;
-
-    private ApplicationModel applicationModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +18,6 @@ public class NextActivity extends BaseActivity {
         setContentView(R.layout.activity_next);
 
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
-
-        applicationModel = ApplicationModel.getInstance();
 
         // this value is NOT set to true unless there are zero records in the local database
         applicationModel.setRequestLocalDatabaseRebuild(false);

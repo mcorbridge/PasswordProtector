@@ -12,7 +12,7 @@ import com.mcorbridge.passwordprotector.read.ReadActivity;
 
 public class BaseActivity extends Activity {
 
-    private ApplicationModel applicationModel = ApplicationModel.getInstance();
+    public ApplicationModel applicationModel = ApplicationModel.getInstance();
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

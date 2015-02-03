@@ -18,7 +18,6 @@ import android.view.View;
 import com.mcorbridge.passwordprotector.JSON.JsonTask;
 import com.mcorbridge.passwordprotector.create.CreateActivity;
 import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
-import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.read.ReadActivity;
 import com.mcorbridge.passwordprotector.service.ServletPostAsyncTask;
 import com.mcorbridge.passwordprotector.sql.Password;
@@ -33,7 +32,6 @@ import java.util.List;
 
 public class PasswordDataActivity extends BaseActivity implements IPasswordActivity{
 
-    private ApplicationModel applicationModel;
     private PasswordsDataSource passwordsDataSource;
     private List<PasswordDataVO> passwordDataVOs;
     Iterator pIterator;
@@ -44,8 +42,6 @@ public class PasswordDataActivity extends BaseActivity implements IPasswordActiv
         setContentView(R.layout.activity_password_data);
 
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
-
-        applicationModel = ApplicationModel.getInstance();
 
         // for offline data work
         passwordsDataSource = new PasswordsDataSource(getApplicationContext());
