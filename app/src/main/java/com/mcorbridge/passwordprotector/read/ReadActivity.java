@@ -69,7 +69,10 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        menu.getItem(2).setVisible(false);
+        menu.getItem(ApplicationConstants.MENU_ITEM_TEST).setVisible(true);
+        menu.getItem(ApplicationConstants.MENU_ITEM_HOME).setVisible(true);
+        menu.getItem(ApplicationConstants.MENU_ITEM_CREATE).setVisible(true);
+        menu.getItem(ApplicationConstants.MENU_ITEM_READ).setVisible(false);
         return true;
     }
 

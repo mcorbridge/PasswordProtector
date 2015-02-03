@@ -23,6 +23,7 @@ import android.widget.PopupWindow;
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
 import com.mcorbridge.passwordprotector.encryption.AESEncryption;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
+import com.mcorbridge.passwordprotector.practice.PracticeActivity;
 import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
 
 import java.util.regex.Matcher;
@@ -30,6 +31,7 @@ import java.util.regex.Pattern;
 
 public class PassPhraseActivity extends BaseActivity {
 
+    // the countdownTimer runs at start up to show the PopupWindow
     private CountDownTimer countDownTimer;
     private String question;
     private String answer;
@@ -99,7 +101,7 @@ public class PassPhraseActivity extends BaseActivity {
         setSharedPreferences(applicationModel.getSecretKey(), "secret_key");
         setSharedPreferences(applicationModel.getEmail(), "secret_email");
 
-        Intent intent = new Intent(this, VisualKeyActivity.class);
+        Intent intent = new Intent(this, PracticeActivity.class);
         startActivity(intent);
     }
 
@@ -133,7 +135,7 @@ public class PassPhraseActivity extends BaseActivity {
             new AlertDialog.Builder(this)
                     .setTitle("Alert")
                     .setMessage(errorMsg)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setIcon(R.drawable.alert_icon)
                     .setPositiveButton("Ok, got it.", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
 // stub

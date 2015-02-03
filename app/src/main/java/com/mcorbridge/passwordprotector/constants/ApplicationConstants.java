@@ -15,4 +15,9 @@ public class ApplicationConstants {
 
     public static final long MILLI_PER_EIGHT_HR = 8 * 60 * 60 * 1000;
 
+    public static final int MENU_ITEM_TEST = 0;
+    public static final int MENU_ITEM_HOME = 1;
+    public static final int MENU_ITEM_CREATE = 2;
+    public static final int MENU_ITEM_READ = 3;
+
 }

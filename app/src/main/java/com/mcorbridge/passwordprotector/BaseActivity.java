@@ -6,11 +6,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mcorbridge.passwordprotector.create.CreateActivity;
+import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.read.ReadActivity;
 
 
 public class BaseActivity extends Activity {
 
+    private ApplicationModel applicationModel = ApplicationModel.getInstance();
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

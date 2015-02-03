@@ -45,10 +45,10 @@ public class CreateActivity extends BaseActivity implements IPasswordActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        menu.getItem(0).setVisible(true);
-        menu.getItem(1).setVisible(false);
-        menu.getItem(2).setVisible(true);
-        menu.getItem(3).setVisible(false);
+        menu.getItem(ApplicationConstants.MENU_ITEM_TEST).setVisible(true);
+        menu.getItem(ApplicationConstants.MENU_ITEM_HOME).setVisible(true);
+        menu.getItem(ApplicationConstants.MENU_ITEM_CREATE).setVisible(false);
+        menu.getItem(ApplicationConstants.MENU_ITEM_READ).setVisible(true);
         return true;
     }
 
@@ -74,7 +74,7 @@ public class CreateActivity extends BaseActivity implements IPasswordActivity{
 
         String jsonRequest = JsonTask.createJSON(category,title,value);
 
-        //If the app is has a network connection save to cloud and save local db simultaneously!
+        // If the app is has a network connection save to cloud and save local db simultaneously!
         if(applicationModel.getIsDataConnected()){
             postToServlet(jsonRequest); //
             saveToLocalDatabase(JsonTask.getID(),category,title,value,0); // '0' flags this as a value that does NOT need to be synchronized with the cloud
@@ -82,7 +82,7 @@ public class CreateActivity extends BaseActivity implements IPasswordActivity{
             saveToLocalDatabase(JsonTask.getID(), category, title, value, 1); // '1' flags this as a value that MUST be synchronized with the cloud
         }
 
-        //here we add a new password object to the password objects in memory
+        // here we add a new password object to the password objects in memory
         // this is NOT persisted, and is only done to speed up the app
         // I do this because I intend to add a feature that gives the user the option to NOT store data locally (SQLite) - but we still need the speed
         if(applicationModel.getDecipheredPasswordDataVOs() != null){

@@ -23,10 +23,15 @@
         EXACT same question and answer.  I am asking you to remember that much.  If you forget that EXACT question and answer,
         your data is forever encrypted.  I cannot help you, the NSA cannot help you, even the script kiddie in Eastern Bulgaria
         cannot help you.  If I get granted unlimited access to the newest quantum computers, I might be able to recover your data, but don\'t count on it.\n\n</string>
+
+    <string name="info_practice">So how does this work?\nBeneath this info page is a Visual Key. You need a unique password to ensure that you, and only YOU has access
+    to your password information.</string>
+
     <string name="title_activity_read_password">ReadPasswordActivity</string>
     <string name="title_activity_create">CreateActivity</string>
     <string name="title_activity_read">ReadActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_practice">Visual Key Practice</string>
     <string name="action_test">Test Activity</string>
     <string name="action_home">Home</string>
     <string name="action_create">Create New</string>
@@ -39,5 +44,6 @@
     <string name="title_activity_base">BaseActivity</string>
     <string name="title_activity_decipher_error">DecipherErrorActivity</string>
     <string name="lock_out_msg">There have been 5 attempts at inputting the Visual Key!\nThis may indicate an unauthorized attempt to access this account.\n\nTHE APP WILL BE LOCKED FOR 8 HRS.\n\nThe owner of the account will be notified by email of these attempts.</string>
+    <string name="title_activity_practice">PracticeActivity</string>
 
 </resources>

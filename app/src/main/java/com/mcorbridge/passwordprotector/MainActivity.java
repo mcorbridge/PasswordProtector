@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.SeekBar;
 
 import com.mcorbridge.passwordprotector.animation.GestureListener;
+import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
 
 
 public class MainActivity extends BaseActivity {
@@ -101,10 +102,10 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        menu.getItem(0).setVisible(false);
-        menu.getItem(1).setVisible(false);
-        menu.getItem(2).setVisible(false);
-        menu.getItem(3).setVisible(false);
+        menu.getItem(ApplicationConstants.MENU_ITEM_TEST).setVisible(false);
+        menu.getItem(ApplicationConstants.MENU_ITEM_HOME).setVisible(false);
+        menu.getItem(ApplicationConstants.MENU_ITEM_CREATE).setVisible(false);
+        menu.getItem(ApplicationConstants.MENU_ITEM_READ).setVisible(false);
         return true;
     }
 
