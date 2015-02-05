@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import com.mcorbridge.passwordprotector.create.CreateActivity;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.read.ReadActivity;
+import com.mcorbridge.passwordprotector.video.VideoActivity;
 
 
 public class BaseActivity extends Activity {
@@ -48,6 +49,11 @@ public class BaseActivity extends Activity {
 
             case R.id.action_read:
                 intent = new Intent(this,ReadActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.action_video:
+                intent = new Intent(this,VideoActivity.class);
                 startActivity(intent);
                 break;
         }

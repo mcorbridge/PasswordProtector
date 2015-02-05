@@ -16,6 +16,9 @@
     <item android:id="@+id/action_read" android:title="@string/action_read"
         android:orderInCategory="100" app:showAsAction="never" />
 
+    <item android:id="@+id/action_video" android:title="@string/action_video"
+        android:orderInCategory="100" app:showAsAction="never" />
+
 
 
 

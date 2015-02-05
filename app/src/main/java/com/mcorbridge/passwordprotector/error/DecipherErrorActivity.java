@@ -27,13 +27,25 @@ public class DecipherErrorActivity extends BaseActivity {
 
         applicationModel.setIncorrectDecipherAttempts(applicationModel.getIncorrectDecipherAttempts() + 1);
 
+        final Intent intent = new Intent(this,MainActivity.class);
+
         //lockout the user if there are greater than 5 attempts at the visual key
         if(applicationModel.getIncorrectDecipherAttempts() > 5){
             Calendar calendar = Calendar.getInstance();
             System.out.println(calendar.getTimeInMillis());
             setSharedPreferences(String.valueOf(calendar.getTimeInMillis()),"lockout_time");
+            new AlertDialog.Builder(this)
+                    .setTitle("Alert")
+                    .setMessage("The PasswordProtector application is now locked for 8 hours.\nAn email has been sent to the account owner")
+                    .setIcon(R.drawable.alert_icon)
+                    .setPositiveButton("Understood", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(intent );
+                        }
+                    })
+                    .show();
         }else{
-            final Intent intent = new Intent(this,MainActivity.class);
+
             new AlertDialog.Builder(this)
                     .setTitle("Alert")
                     .setMessage("There have been\n ------>  " + applicationModel.getIncorrectDecipherAttempts() + "\nattempted logins.\n\nThe app will locked for 8 hrs. IF there are more than 5 incorrect login attempts.")

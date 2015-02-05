@@ -19,5 +19,6 @@ public class ApplicationConstants {
     public static final int MENU_ITEM_HOME = 1;
     public static final int MENU_ITEM_CREATE = 2;
     public static final int MENU_ITEM_READ = 3;
+    public static final int MENU_ITEM_VIDEO = 4;
 
 }
