@@ -82,8 +82,8 @@ public class TimeOut {
 
                 handler.post(new Runnable() {
                     public void run() {
-                        System.out.println("----------> " + ndx++ + " seconds");
                         if(ndx > ApplicationConstants.SECONDS_PER_FIVE_MIN){
+                            System.out.println("time out at ----------> " + ndx++ + " seconds");
                             doTimeOutAlert();
                             stopTimerTask();
                         }
