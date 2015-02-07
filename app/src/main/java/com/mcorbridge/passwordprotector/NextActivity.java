@@ -29,6 +29,7 @@ public class NextActivity extends BaseActivity {
         if(pair.first == null || pair.second == null){
             System.out.println("You must input your shared preferences!");
             Intent intent = new Intent(this, PassPhraseActivity.class);
+            applicationModel.setNewUser(true);
             startActivity(intent);
         }else{
             System.out.println("Welcome back!");

@@ -51,6 +51,9 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
     private RelativeLayout relativeLayout4;
     private int numPracticeAttempts;
     private CountDownTimer countDownTimer; // the countdownTimer runs at start up to show the PopupWindow
+    private boolean isCreateInstructionalVideo = false; //todo change this to false!!!
+    private ImageView[] arrayStars = new ImageView[10];
+    private int requiredPracticeAttempts = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +74,14 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
 
         setResourceIdArray();
 
+        setStarArray();
+
         addBorder();
+
+        if(applicationModel.isDevMode()){
+            requiredPracticeAttempts = 1;
+        }
+
     }
 
 
@@ -128,12 +138,18 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
             if(numDrops == 4){
                 numPracticeAttempts++;
                 System.out.println("visualCipherKey ---> " + visualCipherKey);
+
+                //this is a switch I put in simply to create instructional video
+                if(isCreateInstructionalVideo)
+                    return true;
+
                 doReset();
             }
 
         }
         return true;
     }
+
 
     private String getTypeFromResourceId(View v){
         String type = null;
@@ -301,9 +317,16 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
 
         if(numPracticeAttempts == 1){
             userVisualCipherKey = visualCipherKey;
+            ImageView imageView = arrayStars[numPracticeAttempts-1];
+            imageView.setImageResource(R.drawable.star_on);
         }else{
             if(!visualCipherKey.equals(userVisualCipherKey)){
                 numPracticeAttempts--;
+
+                //this is a switch I put in simply to create instructional video
+                if(isCreateInstructionalVideo)
+                    return;
+
                 new AlertDialog.Builder(this)
                         .setTitle("Alert")
                         .setMessage("This pattern does NOT match your first attempt.\n Each attempt MUST be identical.")
@@ -314,10 +337,13 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
                             }
                         })
                         .show();
+            }else{
+                ImageView imageView = arrayStars[numPracticeAttempts-1];
+                imageView.setImageResource(R.drawable.star_on);
             }
         }
 
-        if(numPracticeAttempts == 10){
+        if(numPracticeAttempts == requiredPracticeAttempts){
             startActivity(new Intent(this, VisualKeyActivity.class));
         }
 
@@ -349,15 +375,43 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
         relativeLayout4 = (RelativeLayout)findViewById(R.id.bottomRight_drop_square);
     }
 
+    private void setStarArray(){
+        arrayStars[0] = (ImageView)findViewById(R.id.star_1);
+        arrayStars[1] = (ImageView)findViewById(R.id.star_2);
+        arrayStars[2] = (ImageView)findViewById(R.id.star_3);
+        arrayStars[3] = (ImageView)findViewById(R.id.star_4);
+        arrayStars[4] = (ImageView)findViewById(R.id.star_5);
+        arrayStars[5] = (ImageView)findViewById(R.id.star_6);
+        arrayStars[6] = (ImageView)findViewById(R.id.star_7);
+        arrayStars[7] = (ImageView)findViewById(R.id.star_8);
+        arrayStars[8] = (ImageView)findViewById(R.id.star_9);
+        arrayStars[9] = (ImageView)findViewById(R.id.star_10);
+    }
+
     // timer allows activity view to be rendered before popup window is created and displayed
     public CountDownTimer getCountDownTimer = new CountDownTimer(600,300) {
         @Override
         public void onTick(long millisUntilFinished) {}
         @Override
         public void onFinish() {
-            showPopup(PracticeActivity.this);
+            showAlert();
+            //showPopup(PracticeActivity.this);
         }
     }.start();
+
+
+    private void showAlert(){
+        new AlertDialog.Builder(this)
+                .setTitle("Alert")
+                .setMessage("Are you ready to start creating your Visual Password?\nYou will required to repeat the pattern 10x\nIt is absolutely imperative that you remember this pattern to retrieve your password data!")
+                .setIcon(R.drawable.alert_icon)
+                .setPositiveButton("Ok, I'm ready.", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+// stub
+                    }
+                })
+                .show();
+    }
 
     private void showPopup(final Activity context) {
 
@@ -391,5 +445,30 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
                 popup.dismiss();
             }
         });
+    }
+
+    public void startOver(View v){
+        //reset stars
+        for(int n=0;n<arrayStars.length;n++){
+            ImageView imageView = arrayStars[n];
+            imageView.setImageResource(R.drawable.star_off);
+        }
+
+        numPracticeAttempts = 0;
+        numDrops = 0;
+        visualCipherKey = "";
+
+        Iterator it = hashMap.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pairs = (Map.Entry)it.next();
+            //System.out.println(pairs.getKey() + " = " + pairs.getValue());
+            RelativeLayout to = (RelativeLayout)pairs.getKey();
+            ImageView from = (ImageView)pairs.getValue();
+            to.removeView(from);
+            to.setBackgroundColor(getResources().getColor(R.color.grey));
+            it.remove(); // avoids a ConcurrentModificationException
+        }
+
+        addBorder();
     }
 }

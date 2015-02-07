@@ -86,6 +86,19 @@ public class VisualKeyActivity extends BaseActivity implements OnTouchListener, 
                     .show();
             }
 
+        if(!getLockOut() && applicationModel.isNewUser()){
+            new AlertDialog.Builder(this)
+                    .setTitle("Welcome!")
+                    .setMessage("Welcome to PasswordProtector!\n\nNow input the Visual Password you just created.")
+                    .setIcon(R.drawable.alert_icon)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .show();
+        }
+
     }
 
     @Override

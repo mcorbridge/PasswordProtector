@@ -49,6 +49,8 @@ public class CreateActivity extends BaseActivity implements IPasswordActivity{
                         }
                     })
                     .show();
+
+            applicationModel.setNewUser(false);
         }
 
     }

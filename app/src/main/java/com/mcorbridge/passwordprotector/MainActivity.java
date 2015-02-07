@@ -1,5 +1,7 @@
 package com.mcorbridge.passwordprotector;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -38,6 +40,9 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // DEV mode
+        applicationModel.setDevMode(true); //todo this MUST be set to false before going live !!!!
+
         View v = findViewById(R.id.main);
         v.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -72,6 +77,19 @@ public class MainActivity extends BaseActivity {
 
             }
         });
+
+        if(applicationModel.isDevMode()){
+            new AlertDialog.Builder(this)
+                    .setTitle("OMG!")
+                    .setMessage("The application is in dev mode")
+                    .setIcon(R.drawable.alert_icon)
+                    .setPositiveButton("Yikes!", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+// stub
+                        }
+                    })
+                    .show();
+        }
     }
 
     @Override

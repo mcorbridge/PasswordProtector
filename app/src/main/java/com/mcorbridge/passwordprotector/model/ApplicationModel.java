@@ -147,4 +147,15 @@ public class ApplicationModel {
     public void setNewUser(boolean isNewUser) {
         this.isNewUser = isNewUser;
     }
+
+    // ----------------------------------------------------------
+    private boolean isDevMode;
+
+    public boolean isDevMode() {
+        return isDevMode;
+    }
+
+    public void setDevMode(boolean isDevMode) {
+        this.isDevMode = isDevMode;
+    }
 }
