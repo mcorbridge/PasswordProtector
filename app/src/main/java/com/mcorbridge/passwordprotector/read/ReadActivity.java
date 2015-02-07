@@ -13,10 +13,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.mcorbridge.passwordprotector.BaseActivity;
 import com.mcorbridge.passwordprotector.JSON.JsonTask;
+import com.mcorbridge.passwordprotector.MainActivity;
 import com.mcorbridge.passwordprotector.R;
 import com.mcorbridge.passwordprotector.adapters.CustomAdapter;
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
@@ -46,6 +48,8 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
 
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
 
+        // automagically signs the user out after 5 min
+        timeOut.setContext(this);
 
         // for offline data work
         passwordsDataSource = new PasswordsDataSource(getApplicationContext());
@@ -61,16 +65,23 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
         if(!applicationModel.getIsDataConnected()){
             showNotConnectedDialog();
         }
+
+        if(!applicationModel.isTimeoutAware()){
+            setApplicationTimeout();
+            applicationModel.setTimeoutAware(true);
+        }
+
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        menu.getItem(ApplicationConstants.MENU_ITEM_TEST).setVisible(true);
+        menu.getItem(ApplicationConstants.MENU_ITEM_TEST).setVisible(false);
         menu.getItem(ApplicationConstants.MENU_ITEM_HOME).setVisible(true);
         menu.getItem(ApplicationConstants.MENU_ITEM_CREATE).setVisible(true);
         menu.getItem(ApplicationConstants.MENU_ITEM_READ).setVisible(false);
+        menu.getItem(ApplicationConstants.MENU_ITEM_VIDEO).setVisible(false);
         return true;
     }
 
@@ -268,5 +279,16 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
                     }
                 })
                 .show();
+    }
+
+    private void setApplicationTimeout(){
+        Toast.makeText(getApplicationContext(), "The application will timeout in 5 minutes",
+                Toast.LENGTH_LONG).show();
+
+        timeOut.startTimer();
+    }
+
+    public void signOut(){
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

@@ -263,4 +263,8 @@ public class PasswordDataActivity extends BaseActivity implements IPasswordActiv
             }
         }
     }
+
+    public void signOut(){
+        startActivity(new Intent(this, MainActivity.class));
+    }
 }

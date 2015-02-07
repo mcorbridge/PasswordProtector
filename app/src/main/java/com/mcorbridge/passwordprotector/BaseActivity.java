@@ -2,18 +2,29 @@ package com.mcorbridge.passwordprotector;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mcorbridge.passwordprotector.create.CreateActivity;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.read.ReadActivity;
+import com.mcorbridge.passwordprotector.timeout.TimeOut;
 import com.mcorbridge.passwordprotector.video.VideoActivity;
 
 
 public class BaseActivity extends Activity {
 
     public ApplicationModel applicationModel = ApplicationModel.getInstance();
+
+    public TimeOut timeOut = TimeOut.getInstance();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -62,4 +73,6 @@ public class BaseActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

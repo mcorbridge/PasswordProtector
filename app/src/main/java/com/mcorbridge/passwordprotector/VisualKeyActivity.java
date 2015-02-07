@@ -105,9 +105,10 @@ public class VisualKeyActivity extends BaseActivity implements OnTouchListener, 
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         menu.getItem(ApplicationConstants.MENU_ITEM_TEST).setVisible(false);
-        menu.getItem(ApplicationConstants.MENU_ITEM_HOME).setVisible(false);
+        menu.getItem(ApplicationConstants.MENU_ITEM_HOME).setVisible(true);
         menu.getItem(ApplicationConstants.MENU_ITEM_CREATE).setVisible(false);
         menu.getItem(ApplicationConstants.MENU_ITEM_READ).setVisible(false);
+        menu.getItem(ApplicationConstants.MENU_ITEM_VIDEO).setVisible(false);
         return true;
     }
 

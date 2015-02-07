@@ -21,4 +21,10 @@ public class ApplicationConstants {
     public static final int MENU_ITEM_READ = 3;
     public static final int MENU_ITEM_VIDEO = 4;
 
+    public static final long SECONDS_PER_ONE_MIN = 1 * 60;
+    public static final long SECONDS_PER_TWO_MIN = 2 * 60;
+    public static final long SECONDS_PER_THREE_MIN = 3 * 60;
+    public static final long SECONDS_PER_FOUR_MIN = 4 * 60;
+    public static final long SECONDS_PER_FIVE_MIN = 5 * 60;
+
 }

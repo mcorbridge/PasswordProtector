@@ -158,4 +158,15 @@ public class ApplicationModel {
     public void setDevMode(boolean isDevMode) {
         this.isDevMode = isDevMode;
     }
+
+    // ----------------------------------------------------------
+    private boolean isTimeoutAware;
+
+    public boolean isTimeoutAware() {
+        return isTimeoutAware;
+    }
+
+    public void setTimeoutAware(boolean isTimeoutAware) {
+        this.isTimeoutAware = isTimeoutAware;
+    }
 }

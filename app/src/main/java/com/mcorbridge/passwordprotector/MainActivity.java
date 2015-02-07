@@ -27,7 +27,9 @@ public class MainActivity extends BaseActivity {
     protected void onStart()
     {
         super.onStart();
+        timeOut.stopTimerTask();
     }
+
     @Override
     protected void onStop(){
         super.onStop();
@@ -41,7 +43,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         // DEV mode
-        applicationModel.setDevMode(true); //todo this MUST be set to false before going live !!!!
+        applicationModel.setDevMode(false); //todo this MUST be set to false before going live !!!!
 
         View v = findViewById(R.id.main);
         v.setOnTouchListener(new View.OnTouchListener() {
@@ -90,6 +92,8 @@ public class MainActivity extends BaseActivity {
                     })
                     .show();
         }
+
+        applicationModel.setTimeoutAware(false);
     }
 
     @Override
@@ -120,11 +124,11 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        menu.getItem(ApplicationConstants.MENU_ITEM_TEST).setVisible(true);
+        menu.getItem(ApplicationConstants.MENU_ITEM_TEST).setVisible(false);
         menu.getItem(ApplicationConstants.MENU_ITEM_HOME).setVisible(false);
         menu.getItem(ApplicationConstants.MENU_ITEM_CREATE).setVisible(false);
         menu.getItem(ApplicationConstants.MENU_ITEM_READ).setVisible(false);
-        menu.getItem(ApplicationConstants.MENU_ITEM_VIDEO).setVisible(true);
+        menu.getItem(ApplicationConstants.MENU_ITEM_VIDEO).setVisible(false);
         return true;
     }
 

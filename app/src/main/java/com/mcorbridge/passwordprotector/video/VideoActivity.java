@@ -116,8 +116,6 @@ public class VideoActivity extends BaseActivity {
 
     public void initializeTimerTask() {
 
-
-
         timerTask = new TimerTask() {
 
             public void run() {

@@ -17,6 +17,7 @@ import android.widget.ToggleButton;
 
 import com.mcorbridge.passwordprotector.BaseActivity;
 import com.mcorbridge.passwordprotector.JSON.JsonTask;
+import com.mcorbridge.passwordprotector.MainActivity;
 import com.mcorbridge.passwordprotector.PasswordDataActivity;
 import com.mcorbridge.passwordprotector.R;
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
@@ -110,10 +111,11 @@ public class UpdateActivity extends BaseActivity implements IPasswordActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        menu.getItem(ApplicationConstants.MENU_ITEM_TEST).setVisible(true);
+        menu.getItem(ApplicationConstants.MENU_ITEM_TEST).setVisible(false);
         menu.getItem(ApplicationConstants.MENU_ITEM_HOME).setVisible(true);
         menu.getItem(ApplicationConstants.MENU_ITEM_CREATE).setVisible(true);
         menu.getItem(ApplicationConstants.MENU_ITEM_READ).setVisible(true);
+        menu.getItem(ApplicationConstants.MENU_ITEM_VIDEO).setVisible(false);
         return true;
     }
 
@@ -318,5 +320,9 @@ public class UpdateActivity extends BaseActivity implements IPasswordActivity{
         System.out.println(results);
         Toast.makeText(getApplicationContext(), results,
                 Toast.LENGTH_LONG).show();
+    }
+
+    public void signOut(){
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

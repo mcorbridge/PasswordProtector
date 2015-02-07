@@ -8,4 +8,6 @@ public interface IPasswordActivity {
 
     void processResults(String results);
 
+    void signOut();
+
 }
