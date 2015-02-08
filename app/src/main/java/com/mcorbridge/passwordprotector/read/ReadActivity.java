@@ -20,6 +20,7 @@ import com.mcorbridge.passwordprotector.BaseActivity;
 import com.mcorbridge.passwordprotector.JSON.JsonTask;
 import com.mcorbridge.passwordprotector.MainActivity;
 import com.mcorbridge.passwordprotector.R;
+import com.mcorbridge.passwordprotector.VisualKeyActivity;
 import com.mcorbridge.passwordprotector.adapters.CustomAdapter;
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
 import com.mcorbridge.passwordprotector.create.CreateActivity;
@@ -89,6 +90,15 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         return true;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(this, VisualKeyActivity.class));
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+        finish();
     }
 
     private void doRead() throws Exception{

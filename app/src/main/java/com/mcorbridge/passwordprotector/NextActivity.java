@@ -7,6 +7,8 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.mcorbridge.passwordprotector.video.VideoActivity;
+
 
 public class NextActivity extends BaseActivity {
 
@@ -26,13 +28,18 @@ public class NextActivity extends BaseActivity {
 
         Pair pair = getSharedPreferences();
 
-        if(pair.first == null || pair.second == null){
+        if(pair.first == null || pair.second == null) {
             System.out.println("You must input your shared preferences!");
             Intent intent = new Intent(this, PassPhraseActivity.class);
             applicationModel.setNewUser(true);
             startActivity(intent);
+        }else if(pref.getString("completed_visual_key", null) == null){ // condition where user starts visual key practice, but does not finish
+            Intent intent = new Intent(this, VideoActivity.class);
+            applicationModel.setNewUser(true);
+            startActivity(intent);
         }else{
             System.out.println("Welcome back!");
+            applicationModel.setNewUser(false);
             applicationModel.setSecretKey(pair.first.toString());
             applicationModel.setEmail(pair.second.toString());
             // open visual key

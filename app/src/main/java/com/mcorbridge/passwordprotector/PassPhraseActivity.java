@@ -52,11 +52,11 @@ public class PassPhraseActivity extends BaseActivity {
 
         if(applicationModel.isDevMode()){
             EditText editTextQ = (EditText)findViewById(R.id.editTextQuestion);
-            editTextQ.setText("who is foo?"); //todo this MUST be nulled before going live!!!!
+            editTextQ.setText(null); //this MUST be nulled before going live!!!!
             EditText editTextA = (EditText)findViewById(R.id.editTextAnswer);
-            editTextA.setText("foo is foo.");//todo this MUST be nulled before going live!!!!
+            editTextA.setText(null);//this MUST be nulled before going live!!!!
             EditText email = (EditText)findViewById(R.id.editTextEmail);
-            email.setText("mikecorbridge@gmail.com");//todo this MUST be nulled before going live!!!!
+            email.setText(null);//this MUST be nulled before going live!!!!
         }
     }
 
@@ -72,6 +72,15 @@ public class PassPhraseActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         return true;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(this, MainActivity.class));
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+        finish();
     }
 
 

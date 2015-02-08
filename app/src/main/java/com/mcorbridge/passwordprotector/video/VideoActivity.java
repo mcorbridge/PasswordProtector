@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.mcorbridge.passwordprotector.BaseActivity;
+import com.mcorbridge.passwordprotector.MainActivity;
 import com.mcorbridge.passwordprotector.R;
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
 import com.mcorbridge.passwordprotector.practice.PracticeActivity;
@@ -92,6 +93,15 @@ public class VideoActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         return true;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(this, MainActivity.class));
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+        finish();
     }
 
     public void startTimer() {

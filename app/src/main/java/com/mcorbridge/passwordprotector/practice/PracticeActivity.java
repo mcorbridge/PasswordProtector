@@ -6,6 +6,7 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -28,6 +29,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
 import com.mcorbridge.passwordprotector.BaseActivity;
+import com.mcorbridge.passwordprotector.MainActivity;
 import com.mcorbridge.passwordprotector.R;
 import com.mcorbridge.passwordprotector.VisualKeyActivity;
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
@@ -54,6 +56,7 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
     private boolean isCreateInstructionalVideo = false; //todo change this to false!!!
     private ImageView[] arrayStars = new ImageView[10];
     private int requiredPracticeAttempts = 10;
+    public SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,8 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
         setContentView(R.layout.activity_practice);
 
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+
+        pref = getApplicationContext().getSharedPreferences("PasswordProtector", MODE_PRIVATE);
 
         findViewById(R.id.red_square).setOnTouchListener(this);
         findViewById(R.id.yellow_square).setOnTouchListener(this);
@@ -99,6 +104,15 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         return true;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(this, MainActivity.class));
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+        finish();
     }
 
     @Override
@@ -344,6 +358,8 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
         }
 
         if(numPracticeAttempts == requiredPracticeAttempts){
+            //todo store value in sharedPreferences to indicate user has completed this section
+            setSharedPreferences("true","completed_visual_key");
             startActivity(new Intent(this, VisualKeyActivity.class));
         }
 
@@ -470,5 +486,11 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
         }
 
         addBorder();
+    }
+
+    public void setSharedPreferences(String key, String type){
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(type, key);  // Saving string
+        editor.apply(); // commit changes
     }
 }
