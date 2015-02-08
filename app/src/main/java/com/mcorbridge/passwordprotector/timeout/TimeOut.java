@@ -1,11 +1,8 @@
 package com.mcorbridge.passwordprotector.timeout;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Handler;
 
-import com.mcorbridge.passwordprotector.R;
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
 import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
 
@@ -51,17 +48,10 @@ public class TimeOut {
 
 
 
-    public void showWarning(String screen){
-        new AlertDialog.Builder(this.context)
-                .setTitle("Alert")
-                .setMessage("The application is about to timeout from " + screen)
-                .setIcon(R.drawable.alert_icon)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-// stub
-                    }
-                })
-                .show();
+    public void showWarning(){
+        System.out.println("------------- 1 min time out warning -----------------");
+        IPasswordActivity activity = (IPasswordActivity)this.context;
+        activity.showTimeoutWarning();
     }
 
     public void startTimer() {
@@ -82,8 +72,11 @@ public class TimeOut {
 
                 handler.post(new Runnable() {
                     public void run() {
-                        if(ndx > ApplicationConstants.SECONDS_PER_FIVE_MIN){
-                            System.out.println("time out at ----------> " + ndx++ + " seconds");
+                        ndx++;
+                        if(ndx == ApplicationConstants.SECONDS_PER_FOUR_MIN){
+                            showWarning();
+                        }
+                        else if(ndx > ApplicationConstants.SECONDS_PER_FIVE_MIN){
                             doTimeOutAlert();
                             stopTimerTask();
                         }
@@ -103,6 +96,7 @@ public class TimeOut {
     }
 
     private void doTimeOutAlert(){
+        System.out.println("------------- app time out -----------------");
         IPasswordActivity activity = (IPasswordActivity)this.context;
         activity.signOut();
     }

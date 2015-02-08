@@ -14,6 +14,7 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mcorbridge.passwordprotector.JSON.JsonTask;
 import com.mcorbridge.passwordprotector.create.CreateActivity;
@@ -266,5 +267,10 @@ public class PasswordDataActivity extends BaseActivity implements IPasswordActiv
 
     public void signOut(){
         startActivity(new Intent(this, MainActivity.class));
+    }
+
+    public void showTimeoutWarning(){
+        Toast.makeText(getApplicationContext(), "The application will timeout in 1 minute",
+                Toast.LENGTH_LONG).show();
     }
 }

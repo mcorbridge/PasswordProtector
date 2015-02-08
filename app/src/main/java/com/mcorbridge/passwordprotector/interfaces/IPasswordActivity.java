@@ -10,4 +10,6 @@ public interface IPasswordActivity {
 
     void signOut();
 
+    void showTimeoutWarning();
+
 }

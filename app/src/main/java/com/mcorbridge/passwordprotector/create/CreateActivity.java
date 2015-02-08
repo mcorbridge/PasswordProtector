@@ -156,4 +156,9 @@ public class CreateActivity extends BaseActivity implements IPasswordActivity{
     public void signOut(){
         startActivity(new Intent(this, MainActivity.class));
     }
+
+    public void showTimeoutWarning(){
+        Toast.makeText(getApplicationContext(), "The application will timeout in 1 minute",
+                Toast.LENGTH_LONG).show();
+    }
 }
