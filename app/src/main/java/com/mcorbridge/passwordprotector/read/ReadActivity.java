@@ -108,7 +108,9 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
         if(applicationModel.getDecipheredPasswordDataVOs() != null){
             System.out.println("****************** read data from object in memory ********************");
             progressBar.setVisibility(View.INVISIBLE);
-            bindPasswordDataToList(applicationModel.getDecipheredPasswordDataVOs());
+
+            //DON'T show the items that have a DELETE flag !!!!!!
+            bindPasswordDataToList(excludeDeletedData(applicationModel.getDecipheredPasswordDataVOs()));
             return;
         }
 
@@ -117,6 +119,25 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
         }else{
             readFromLocalDatabase();
         }
+    }
+
+    /**
+     * Iterate the in memory data.
+     * Similar to the data from the cloud AND the local data, do not show PasswordDataVO's that have action == delete
+     * @param passwordDataVOs
+     * @return
+     */
+    private ArrayList<PasswordDataVO> excludeDeletedData(ArrayList<PasswordDataVO> passwordDataVOs){
+        ArrayList<PasswordDataVO> deleteExcludedData = new ArrayList<PasswordDataVO>();
+
+        Iterator iterator = passwordDataVOs.iterator();
+        while(iterator.hasNext()){
+            PasswordDataVO passwordDataVO = (PasswordDataVO)iterator.next();
+            if(!passwordDataVO.getAction().equals(ApplicationConstants.DELETE)){
+                deleteExcludedData.add(passwordDataVO);
+            }
+        }
+        return deleteExcludedData;
     }
 
     /**
