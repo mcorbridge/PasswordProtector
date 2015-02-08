@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
         android:state_pressed="true"
-        android:drawable="@drawable/jog_tab_right_confirm_green">
+        android:drawable="@drawable/jog_tab_right_pressed_green">
     </item>
     <item
         android:drawable="@drawable/jog_tab_right_confirm_green">

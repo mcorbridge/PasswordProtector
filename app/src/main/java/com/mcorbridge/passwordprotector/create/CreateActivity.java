@@ -47,9 +47,9 @@ public class CreateActivity extends BaseActivity implements IPasswordActivity{
         if(applicationModel.isNewUser()){
             new AlertDialog.Builder(this)
                     .setTitle("Alert")
-                    .setMessage("Welcome!\nYou are a new user.")
+                    .setMessage(R.string.empty_database)
                     .setIcon(R.drawable.alert_icon)
-                    .setPositiveButton("Thanks", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
 // stub
                         }

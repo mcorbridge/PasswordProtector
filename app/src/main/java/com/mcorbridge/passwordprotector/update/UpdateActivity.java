@@ -255,7 +255,7 @@ public class UpdateActivity extends BaseActivity implements IPasswordActivity{
     private void modifyPasswordDataInMemory(Long id, String category, String title, String value, String action){
         ArrayList<PasswordDataVO> passwordDataVOs = applicationModel.getDecipheredPasswordDataVOs();
         Iterator<PasswordDataVO> iterator = passwordDataVOs.iterator();
-        if(action == ApplicationConstants.CREATE){
+        if(action.equals(ApplicationConstants.CREATE)){
             while(iterator.hasNext()){
                 PasswordDataVO passwordDataVO = iterator.next();
                 System.out.println(passwordDataVO.getId() + " == " + id);
@@ -276,6 +276,8 @@ public class UpdateActivity extends BaseActivity implements IPasswordActivity{
                     break;
                 }
             }
+
+            applicationModel.setDecipheredPasswordDataVOs(passwordDataVOs); //update data in memory
         }
 
         Intent intent = new Intent(this, PasswordDataActivity.class);
@@ -337,7 +339,7 @@ public class UpdateActivity extends BaseActivity implements IPasswordActivity{
     }
 
     public void showTimeoutWarning(){
-        Toast.makeText(getApplicationContext(), "The application will timeout in 1 minute",
+        Toast.makeText(getApplicationContext(), R.string.timeout_warning,
                 Toast.LENGTH_LONG).show();
     }
 }
