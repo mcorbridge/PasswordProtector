@@ -48,5 +48,6 @@
     <string name="title_activity_title_1">Title_1</string>
     <string name="timeout_warning">The application will timeout in 1 minute</string>
     <string name="empty_database">Your Password database is currently empty.\n\nLet\'s start filling it!</string>
+    <string name="locked_out_msg">The PasswordProtector application is now locked for 8 hours.\nAn email has been sent to the account owner</string>
 
 </resources>
