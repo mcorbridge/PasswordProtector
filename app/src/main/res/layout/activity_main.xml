@@ -52,7 +52,7 @@
             android:clickable="false"
             android:max="100"
             android:progressDrawable="@android:color/transparent"
-            android:thumb="@drawable/jog_tab_right_confirm_green"
+            android:thumb="@xml/thumb_drawable"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_gravity="right|bottom" />
