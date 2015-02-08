@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -243,9 +242,6 @@ public class VisualKeyActivity extends BaseActivity implements OnTouchListener, 
                 applicationModel.setCipher(applicationModel.getSecretKey().concat( applicationModel.getVisualCipherKey()));
                 //System.out.println("application email ---> " + applicationModel.getEmail());
                 //System.out.println("application cipher ---> " + applicationModel.getCipher());
-
-                MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.success);
-                mediaPlayer.start(); // no need to call prepare(); create() does that for you
 
                 Intent intent = new Intent(this, PasswordDataActivity.class);
                 startActivity(intent);

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,6 +58,9 @@ public class DecipherErrorActivity extends BaseActivity {
                     })
                     .show();
         }
+
+        MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.error);
+        mediaPlayer.start(); // no need to call prepare(); create() does that for you
 
     }
 

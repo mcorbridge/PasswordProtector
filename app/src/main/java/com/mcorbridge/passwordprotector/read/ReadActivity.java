@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.Menu;
@@ -41,6 +42,7 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
 
     private ProgressBar progressBar;
     private PasswordsDataSource passwordsDataSource;
+    private boolean isDecipherError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,6 +225,13 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
     }
 
     private void bindPasswordDataToList(ArrayList<PasswordDataVO> decipheredPasswordDataVOs){
+
+        // feel free to play the success tone now  :-)
+        if(!isDecipherError){
+            MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.success);
+            mediaPlayer.start(); // no need to call prepare(); create() does that for you
+        }
+
         //bind results to listView
         ArrayAdapter<PasswordDataVO> itemsAdapter = new ArrayAdapter<PasswordDataVO>(this, android.R.layout.simple_list_item_1, decipheredPasswordDataVOs);
         ListView listView = (ListView) findViewById(R.id.passwordList);
@@ -279,6 +288,7 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
         } catch (Exception e) {
             // the decipher will fail if the pass phrase question/answer OR visual key are INCORRECT!
             System.out.println("decipher error");
+            isDecipherError = true;
             startActivity(new Intent(this, DecipherErrorActivity.class));
         }
         return decipheredPasswordDataVOs;
