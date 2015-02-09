@@ -27,6 +27,7 @@ import com.mcorbridge.passwordprotector.read.ReadActivity;
 import com.mcorbridge.passwordprotector.service.ServletPostAsyncTask;
 import com.mcorbridge.passwordprotector.sql.Password;
 import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
+import com.mcorbridge.passwordprotector.validators.CreateValidation;
 import com.mcorbridge.passwordprotector.vo.PasswordDataVO;
 
 import java.util.ArrayList;
@@ -150,6 +151,11 @@ public class UpdateActivity extends BaseActivity implements IPasswordActivity{
      * @param v
      */
     public void doModify(View v){
+
+        // go no further IF either the title or value is submitted blank
+        if(!CreateValidation.validate(this,category.getText().toString(), title.getText().toString(), value.getText().toString()))
+            return;
+
         new AlertDialog.Builder(this)
                 .setTitle("Alert")
                 .setMessage(R.string.info_update)

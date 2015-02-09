@@ -31,13 +31,16 @@ public class DecipherErrorActivity extends BaseActivity {
         final Intent intent = new Intent(this,MainActivity.class);
 
         //lockout the user if there are greater than 5 attempts at the visual key
+        // Ok, granted they can erase all the application data and start from ground zero
+        // but that gets REALLY tedious because the entire application needs to be initialized.
+        // So, this should deter anyone except the most stupid.
         if(applicationModel.getIncorrectDecipherAttempts() > 5){
             Calendar calendar = Calendar.getInstance();
-            System.out.println(calendar.getTimeInMillis());
+            System.out.println("calendar time in millisecs ------->" + calendar.getTimeInMillis());
             setSharedPreferences(String.valueOf(calendar.getTimeInMillis()),"lockout_time");
             new AlertDialog.Builder(this)
                     .setTitle("Alert")
-                    .setMessage("The PasswordProtector application is now locked for 8 hours.\nAn email has been sent to the account owner")
+                    .setMessage(R.string.locked_out_msg)
                     .setIcon(R.drawable.alert_icon)
                     .setPositiveButton("Understood", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {

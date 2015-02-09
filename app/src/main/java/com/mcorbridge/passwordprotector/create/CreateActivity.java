@@ -23,6 +23,7 @@ import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
 import com.mcorbridge.passwordprotector.read.ReadActivity;
 import com.mcorbridge.passwordprotector.service.ServletPostAsyncTask;
 import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
+import com.mcorbridge.passwordprotector.validators.CreateValidation;
 import com.mcorbridge.passwordprotector.vo.PasswordDataVO;
 
 import java.util.ArrayList;
@@ -102,6 +103,10 @@ public class CreateActivity extends BaseActivity implements IPasswordActivity{
         String title = editTextTitle.getText().toString();
         String value = editTextValue.getText().toString();
 
+        // go no further IF either the title or value is submitted blank
+        if(!CreateValidation.validate(this,title,value))
+            return;
+
         //'personal' remains the default category
         if(category.length() == 0){
             category = "personal";
@@ -134,6 +139,7 @@ public class CreateActivity extends BaseActivity implements IPasswordActivity{
         Intent intent = new Intent(this, PasswordDataActivity.class);
         startActivity(intent);
     }
+
 
     private void saveToLocalDatabase(Long id, String category, String title, String value, int modified)throws Exception{
         passwordsDataSource.open();

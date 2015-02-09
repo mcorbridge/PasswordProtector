@@ -69,10 +69,7 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
             showNotConnectedDialog();
         }
 
-        if(!applicationModel.isTimeoutAware()){
-            setApplicationTimeout();
-            applicationModel.setTimeoutAware(true);
-        }
+
 
     }
 
@@ -226,10 +223,15 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
 
     private void bindPasswordDataToList(ArrayList<PasswordDataVO> decipheredPasswordDataVOs){
 
-        // feel free to play the success tone now  :-)
-        if(!isDecipherError){
+        // the app has successfully deciphered the password data therefore start the 5 min app timeout,
+        // notify with a Toast, and play a success tone.
+        if(!isDecipherError && !applicationModel.isTimeoutAware()){
+            setApplicationTimeout();
+            applicationModel.setTimeoutAware(true);
+
             MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.success);
             mediaPlayer.start(); // no need to call prepare(); create() does that for you
+            isDecipherError = false;
         }
 
         //bind results to listView
