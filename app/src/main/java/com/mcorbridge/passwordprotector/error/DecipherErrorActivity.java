@@ -30,13 +30,13 @@ public class DecipherErrorActivity extends BaseActivity {
 
         final Intent intent = new Intent(this,MainActivity.class);
 
-        //lockout the user if there are greater than 5 attempts at the visual key
-        // Ok, granted they can erase all the application data and start from ground zero
-        // but that gets REALLY tedious because the entire application needs to be initialized.
+        // Lockout the user if there are more than 5 attempts at the visual key.
+        // Ok, granted, they can erase all the application data and start from ground zero
+        // but that gets REALLY tedious because the entire application then needs to be initialized.
         // So, this should deter anyone except the most stupid.
         if(applicationModel.getIncorrectDecipherAttempts() > 5){
             Calendar calendar = Calendar.getInstance();
-            System.out.println("calendar time in millisecs ------->" + calendar.getTimeInMillis());
+            //System.out.println("calendar time in millisecs ------->" + calendar.getTimeInMillis());
             setSharedPreferences(String.valueOf(calendar.getTimeInMillis()),"lockout_time");
             new AlertDialog.Builder(this)
                     .setTitle("Alert")
@@ -52,7 +52,7 @@ public class DecipherErrorActivity extends BaseActivity {
 
             new AlertDialog.Builder(this)
                     .setTitle("Alert")
-                    .setMessage("There have been\n ------>  " + applicationModel.getIncorrectDecipherAttempts() + "\nattempted logins.\n\nThe app will locked for 8 hrs. IF there are more than 5 incorrect login attempts.")
+                    .setMessage("There have been\n ------>  " + applicationModel.getIncorrectDecipherAttempts() + "\nattempted logins.\n\nThe app will be locked for 8 hours IF there are more than 5 incorrect login attempts.")
                     .setIcon(R.drawable.alert_icon)
                     .setPositiveButton("Ok, got it.", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -65,6 +65,15 @@ public class DecipherErrorActivity extends BaseActivity {
         MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.error);
         mediaPlayer.start(); // no need to call prepare(); create() does that for you
 
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(this, MainActivity.class));
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+        finish();
     }
 
 

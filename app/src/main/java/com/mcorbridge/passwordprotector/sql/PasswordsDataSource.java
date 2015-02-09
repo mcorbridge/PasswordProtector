@@ -27,7 +27,7 @@ public class PasswordsDataSource {
                                     SQLiteHelper.COLUMN_MODIFIED,
                                     SQLiteHelper.COLUMN_NAME,
                                     SQLiteHelper.COLUMN_TITLE,
-                                    SQLiteHelper.COLUMN_VALUE};
+                                    SQLiteHelper.COLUMN_VALUE  };
 
     public PasswordsDataSource(Context context) {
         dbHelper = new SQLiteHelper(context);

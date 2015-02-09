@@ -184,7 +184,6 @@ public class PassPhraseActivity extends BaseActivity {
         popup.showAtLocation(layout,Gravity.NO_GRAVITY,0,170);
 
         // Getting a reference to Close button, and close the popup when clicked.
-        //todo the submit button on the popup has a transparency that makes the button hard to see?
         Button close = (Button) layout.findViewById(R.id.close);
         close.setOnClickListener(new View.OnClickListener() {
 
