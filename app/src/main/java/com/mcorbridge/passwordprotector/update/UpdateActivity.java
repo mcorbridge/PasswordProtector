@@ -152,7 +152,7 @@ public class UpdateActivity extends BaseActivity implements IPasswordActivity{
      */
     public void doModify(View v){
 
-        // go no further IF either the title or value is submitted blank
+        // go no further IF either the category, title or value is submitted blank
         if(!CreateValidation.validate(this,category.getText().toString(), title.getText().toString(), value.getText().toString()))
             return;
 
