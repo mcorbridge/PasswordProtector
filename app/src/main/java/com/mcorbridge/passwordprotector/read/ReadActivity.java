@@ -29,12 +29,14 @@ import com.mcorbridge.passwordprotector.encryption.AESEncryption;
 import com.mcorbridge.passwordprotector.error.DecipherErrorActivity;
 import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
 import com.mcorbridge.passwordprotector.service.ServletPostAsyncTask;
+import com.mcorbridge.passwordprotector.sort.PasswordDataVOComparator;
 import com.mcorbridge.passwordprotector.sql.Password;
 import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
 import com.mcorbridge.passwordprotector.update.UpdateActivity;
 import com.mcorbridge.passwordprotector.vo.PasswordDataVO;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -109,7 +111,14 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
             progressBar.setVisibility(View.INVISIBLE);
 
             //DON'T show the items that have a DELETE flag !!!!!!
-            bindPasswordDataToList(excludeDeletedData(applicationModel.getDecipheredPasswordDataVOs()));
+            ArrayList<PasswordDataVO> dataWithDeleteRemoved = excludeDeletedData(applicationModel.getDecipheredPasswordDataVOs());
+
+            // sort the data a-z
+            Collections.sort(dataWithDeleteRemoved, new PasswordDataVOComparator());
+
+            //finally, bind the data to a ListView
+            bindPasswordDataToList(dataWithDeleteRemoved);
+
             return;
         }
 
@@ -157,7 +166,10 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
         passwordsDataSource.close();
         PasswordDataVO[] passwordDataVOs = arrayFromQuery(passwords);
         ArrayList<PasswordDataVO> decipheredPasswordDataVOs = doDecipherResult(passwordDataVOs);
-        //testDecipheredPasswordDataVOs(decipheredPasswordDataVOs);
+
+        // sort the data a-z
+        Collections.sort(decipheredPasswordDataVOs, new PasswordDataVOComparator());
+
         bindPasswordDataToList(decipheredPasswordDataVOs);
     }
 
@@ -216,9 +228,10 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
         // we don't want to make unnecessary calls to the server, so place the results in memory
         applicationModel.setDecipheredPasswordDataVOs(decipheredPasswordDataVOs);
 
-        bindPasswordDataToList(applicationModel.getDecipheredPasswordDataVOs());
+        // sort the data a-z
+        Collections.sort(decipheredPasswordDataVOs, new PasswordDataVOComparator());
 
-        //testDecipheredPasswordDataVOs(decipheredPasswordDataVOs);
+        bindPasswordDataToList(applicationModel.getDecipheredPasswordDataVOs());
     }
 
     private void bindPasswordDataToList(ArrayList<PasswordDataVO> decipheredPasswordDataVOs){

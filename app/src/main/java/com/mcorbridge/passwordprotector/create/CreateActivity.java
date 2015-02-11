@@ -159,11 +159,23 @@ public class CreateActivity extends BaseActivity implements IPasswordActivity{
     }
 
     public void processResults(String results){
+        if(results.equals(ApplicationConstants.CREATE_OVER_LIMIT)){
+            new AlertDialog.Builder(this)
+                    .setTitle("Alert")
+                    .setMessage(R.string.create_limit_reached)
+                    .setIcon(R.drawable.alert_icon)
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+// stub
+                        }
+                    })
+                    .show();
+        }
         System.out.println(results);
     }
 
     private void setApplicationTimeout(){
-        Toast.makeText(getApplicationContext(), "The application will timeout in " + ApplicationConstants.SECONDS_PER_ONE_MIN + " minute(s)",
+        Toast.makeText(getApplicationContext(), "The application will timeout in 5 minutes",
                 Toast.LENGTH_LONG).show();
 
         timeOut.startTimer();

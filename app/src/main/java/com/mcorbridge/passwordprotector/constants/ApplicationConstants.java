@@ -27,4 +27,6 @@ public class ApplicationConstants {
     public static final long SECONDS_PER_FOUR_MIN = 4 * 60;
     public static final long SECONDS_PER_FIVE_MIN = 5 * 60;
 
+    public static final String CREATE_OVER_LIMIT = "overLimit";
+
 }
