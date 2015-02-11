@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.DragEvent;
 import android.view.Gravity;
@@ -155,12 +156,25 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
                 if(isCreateInstructionalVideo)
                     return true;
 
-                doReset();
+
+                // insert 1 sec delay after last square is dropped
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Do something after 1s = 1000ms
+                        doReset();
+                    }
+                }, 1000);
+
             }
 
         }
         return true;
     }
+
+
+
 
 
     private String getTypeFromResourceId(View v){
