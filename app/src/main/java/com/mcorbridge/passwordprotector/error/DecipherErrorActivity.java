@@ -17,14 +17,11 @@ import java.util.Calendar;
 
 public class DecipherErrorActivity extends BaseActivity {
 
-    private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decipher_error);
-
-        pref = getApplicationContext().getSharedPreferences("PasswordProtector", MODE_PRIVATE);
 
         applicationModel.setIncorrectDecipherAttempts(applicationModel.getIncorrectDecipherAttempts() + 1);
 
@@ -62,8 +59,11 @@ public class DecipherErrorActivity extends BaseActivity {
                     .show();
         }
 
-        MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.error);
-        mediaPlayer.start(); // no need to call prepare(); create() does that for you
+        if(settingsVO.isSound()){
+            MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.error);
+            mediaPlayer.start();
+        }
+
 
     }
 

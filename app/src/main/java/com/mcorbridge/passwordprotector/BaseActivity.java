@@ -2,6 +2,7 @@ package com.mcorbridge.passwordprotector;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,8 +10,10 @@ import android.view.MenuItem;
 import com.mcorbridge.passwordprotector.create.CreateActivity;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
 import com.mcorbridge.passwordprotector.read.ReadActivity;
+import com.mcorbridge.passwordprotector.settings.SettingsActivity;
 import com.mcorbridge.passwordprotector.timeout.TimeOut;
 import com.mcorbridge.passwordprotector.video.VideoActivity;
+import com.mcorbridge.passwordprotector.vo.SettingsVO;
 
 
 public class BaseActivity extends Activity {
@@ -19,10 +22,18 @@ public class BaseActivity extends Activity {
 
     public TimeOut timeOut = TimeOut.getInstance();
 
+    public SharedPreferences pref;
+
+    public SettingsVO settingsVO;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        pref = getApplicationContext().getSharedPreferences("PasswordProtector", MODE_PRIVATE);
+
+        settingsVO = applicationModel.getSettingsVO();
 
     }
 
@@ -65,6 +76,11 @@ public class BaseActivity extends Activity {
 
             case R.id.action_video:
                 intent = new Intent(this,VideoActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.action_settings:
+                intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
         }

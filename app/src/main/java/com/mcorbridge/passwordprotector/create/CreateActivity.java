@@ -76,6 +76,7 @@ public class CreateActivity extends BaseActivity implements IPasswordActivity{
         menu.getItem(ApplicationConstants.MENU_ITEM_CREATE).setVisible(false);
         menu.getItem(ApplicationConstants.MENU_ITEM_READ).setVisible(true);
         menu.getItem(ApplicationConstants.MENU_ITEM_VIDEO).setVisible(false);
+        menu.getItem(ApplicationConstants.MENU_ITEM_SETTINGS).setVisible(true);
         return true;
     }
 

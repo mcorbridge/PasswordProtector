@@ -56,7 +56,6 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
     private boolean isCreateInstructionalVideo = false; //todo change this to false!!!
     private ImageView[] arrayStars = new ImageView[10];
     private int requiredPracticeAttempts = 10;
-    public SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +63,6 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
         setContentView(R.layout.activity_practice);
 
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
-
-        pref = getApplicationContext().getSharedPreferences("PasswordProtector", MODE_PRIVATE);
 
         findViewById(R.id.red_square).setOnTouchListener(this);
         findViewById(R.id.yellow_square).setOnTouchListener(this);
@@ -97,6 +94,7 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
         menu.getItem(ApplicationConstants.MENU_ITEM_HOME).setVisible(false);
         menu.getItem(ApplicationConstants.MENU_ITEM_CREATE).setVisible(false);
         menu.getItem(ApplicationConstants.MENU_ITEM_READ).setVisible(false);
+        menu.getItem(ApplicationConstants.MENU_ITEM_SETTINGS).setVisible(false);
         return true;
     }
 

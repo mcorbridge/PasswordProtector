@@ -35,17 +35,12 @@ public class PassPhraseActivity extends BaseActivity {
     private String question;
     private String answer;
     private String email;
-
-    public SharedPreferences pref;
-
     private PasswordsDataSource passwordsDataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pass_phrase);
-
-        pref = getApplicationContext().getSharedPreferences("PasswordProtector", MODE_PRIVATE);
 
         // for offline data work
         passwordsDataSource = new PasswordsDataSource(getApplicationContext());

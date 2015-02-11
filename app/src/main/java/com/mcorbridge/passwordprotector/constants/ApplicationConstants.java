@@ -20,6 +20,7 @@ public class ApplicationConstants {
     public static final int MENU_ITEM_CREATE = 2;
     public static final int MENU_ITEM_READ = 3;
     public static final int MENU_ITEM_VIDEO = 4;
+    public static final int MENU_ITEM_SETTINGS = 5;
 
     public static final long SECONDS_PER_ONE_MIN = 1 * 60;
     public static final long SECONDS_PER_TWO_MIN = 2 * 60;
@@ -28,5 +29,7 @@ public class ApplicationConstants {
     public static final long SECONDS_PER_FIVE_MIN = 5 * 60;
 
     public static final String CREATE_OVER_LIMIT = "overLimit";
+
+    public static final String SOUND_SETTING = "sound_setting";
 
 }

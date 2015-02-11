@@ -1,7 +1,6 @@
 package com.mcorbridge.passwordprotector;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.Menu;
@@ -12,7 +11,6 @@ import com.mcorbridge.passwordprotector.video.VideoActivity;
 
 public class NextActivity extends BaseActivity {
 
-    public SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +21,6 @@ public class NextActivity extends BaseActivity {
 
         // this value is NOT set to true unless there are zero records in the local database
         applicationModel.setRequestLocalDatabaseRebuild(false);
-
-        pref = getApplicationContext().getSharedPreferences("PasswordProtector", MODE_PRIVATE);
 
         Pair pair = getSharedPreferences();
 

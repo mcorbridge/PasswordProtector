@@ -1,6 +1,7 @@
 package com.mcorbridge.passwordprotector.model;
 
 import com.mcorbridge.passwordprotector.vo.PasswordDataVO;
+import com.mcorbridge.passwordprotector.vo.SettingsVO;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -168,5 +169,16 @@ public class ApplicationModel {
 
     public void setTimeoutAware(boolean isTimeoutAware) {
         this.isTimeoutAware = isTimeoutAware;
+    }
+
+    // ----------------------------------------------------------
+    private SettingsVO settingsVO = new SettingsVO();
+
+    public SettingsVO getSettingsVO() {
+        return settingsVO;
+    }
+
+    public void setSettingsVO(SettingsVO settingsVO) {
+        this.settingsVO = settingsVO;
     }
 }

@@ -16,7 +16,6 @@ import java.util.List;
 public class TestActivity extends BaseActivity {
 
     private PasswordsDataSource passwordsDataSource;
-    private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +24,6 @@ public class TestActivity extends BaseActivity {
 
         // for offline data work
         passwordsDataSource = new PasswordsDataSource(getApplicationContext());
-
-        pref = getApplicationContext().getSharedPreferences("PasswordProtector", MODE_PRIVATE);
-
     }
 
 

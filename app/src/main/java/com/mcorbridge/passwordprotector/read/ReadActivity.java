@@ -84,6 +84,7 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
         menu.getItem(ApplicationConstants.MENU_ITEM_CREATE).setVisible(true);
         menu.getItem(ApplicationConstants.MENU_ITEM_READ).setVisible(false);
         menu.getItem(ApplicationConstants.MENU_ITEM_VIDEO).setVisible(false);
+        menu.getItem(ApplicationConstants.MENU_ITEM_SETTINGS).setVisible(true);
         return true;
     }
 
@@ -242,8 +243,11 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
             setApplicationTimeout();
             applicationModel.setTimeoutAware(true);
 
-            MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.success);
-            mediaPlayer.start(); // no need to call prepare(); create() does that for you
+            if(settingsVO.isSound()){
+                MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.success);
+                mediaPlayer.start();
+            }
+
             isDecipherError = false;
         }
 

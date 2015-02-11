@@ -50,5 +50,6 @@
     <string name="empty_database">Your Password database is currently empty.\n\nLet\'s start filling it!</string>
     <string name="locked_out_msg">The PasswordProtector application is now locked for 8 hours.\nAn email has been sent to the account owner</string>
     <string name="create_limit_reached">This trial version allows you to same six passwords.  To save up to 100 passwords, please purchase the PasswordProtector Unlimited version.</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 
 </resources>

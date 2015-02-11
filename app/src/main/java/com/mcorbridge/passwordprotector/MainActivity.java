@@ -43,6 +43,8 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+
         // DEV mode
         applicationModel.setDevMode(false); //todo this MUST be set to false before going live !!!!
 
@@ -95,6 +97,22 @@ public class MainActivity extends BaseActivity {
         }
 
         applicationModel.setTimeoutAware(false);
+
+        applicationSettings();
+    }
+
+    private void applicationSettings(){
+        String soundSetting = pref.getString(ApplicationConstants.SOUND_SETTING, null);
+        if(soundSetting != null){
+            if(soundSetting.equals("true")){
+                settingsVO.setSound(true);
+            }else{
+                settingsVO.setSound(false);
+            }
+        }else{
+            settingsVO.setSound(true);
+        }
+
     }
 
     private void doThumbAnimation(){
@@ -129,9 +147,10 @@ public class MainActivity extends BaseActivity {
     }
 
     public void doNext(){
-        MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.whoosh);
-        mediaPlayer.start();
-
+        if(settingsVO.isSound()){
+            MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.whoosh);
+            mediaPlayer.start();
+        }
         Intent intent = new Intent(this, NextActivity.class);
         startActivity(intent);
     }
@@ -145,6 +164,7 @@ public class MainActivity extends BaseActivity {
         menu.getItem(ApplicationConstants.MENU_ITEM_CREATE).setVisible(false);
         menu.getItem(ApplicationConstants.MENU_ITEM_READ).setVisible(false);
         menu.getItem(ApplicationConstants.MENU_ITEM_VIDEO).setVisible(false);
+        menu.getItem(ApplicationConstants.MENU_ITEM_SETTINGS).setVisible(false);
         return true;
     }
 

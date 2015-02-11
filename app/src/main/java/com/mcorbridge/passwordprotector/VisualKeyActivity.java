@@ -40,7 +40,6 @@ public class VisualKeyActivity extends BaseActivity implements OnTouchListener, 
     private RelativeLayout relativeLayout3;
     private RelativeLayout relativeLayout4;
     private HashMap hashMap = new HashMap();
-    private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +47,6 @@ public class VisualKeyActivity extends BaseActivity implements OnTouchListener, 
         setContentView(R.layout.activity_visual_key);
 
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
-
-        pref = getApplicationContext().getSharedPreferences("PasswordProtector", MODE_PRIVATE);
 
         findViewById(R.id.red_square).setOnTouchListener(this);
         findViewById(R.id.yellow_square).setOnTouchListener(this);
@@ -108,6 +105,7 @@ public class VisualKeyActivity extends BaseActivity implements OnTouchListener, 
         menu.getItem(ApplicationConstants.MENU_ITEM_CREATE).setVisible(false);
         menu.getItem(ApplicationConstants.MENU_ITEM_READ).setVisible(false);
         menu.getItem(ApplicationConstants.MENU_ITEM_VIDEO).setVisible(false);
+        menu.getItem(ApplicationConstants.MENU_ITEM_SETTINGS).setVisible(false);
         return true;
     }
 
