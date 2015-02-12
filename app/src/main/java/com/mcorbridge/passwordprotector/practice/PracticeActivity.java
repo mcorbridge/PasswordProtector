@@ -54,7 +54,7 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
     private RelativeLayout relativeLayout4;
     private int numPracticeAttempts;
     private CountDownTimer countDownTimer; // the countdownTimer runs at start up to show the PopupWindow
-    private boolean isCreateInstructionalVideo = false; //todo change this to false!!!
+    private boolean isCreateInstructionalVideo = false; //todo in production this must be set to false!!!
     private ImageView[] arrayStars = new ImageView[10];
     private int requiredPracticeAttempts = 10;
 
@@ -84,7 +84,6 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
         if(applicationModel.isDevMode()){
             requiredPracticeAttempts = 1;
         }
-
     }
 
 
@@ -152,10 +151,9 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
                 numPracticeAttempts++;
                 System.out.println("visualCipherKey ---> " + visualCipherKey);
 
-                //this is a switch I put in simply to create instructional video
+                //this is a switch I put in to create instructional video
                 if(isCreateInstructionalVideo)
                     return true;
-
 
                 // insert 1 sec delay after last square is dropped
                 final Handler handler = new Handler();
@@ -166,16 +164,10 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
                         doReset();
                     }
                 }, 1000);
-
             }
-
         }
         return true;
     }
-
-
-
-
 
     private String getTypeFromResourceId(View v){
         String type = null;
@@ -369,14 +361,26 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
             }
         }
 
+        // user has successfully completed 10 identical drops
         if(numPracticeAttempts == requiredPracticeAttempts){
-            //todo store value in sharedPreferences to indicate user has completed this section
             setSharedPreferences("true","completed_visual_key");
-            startActivity(new Intent(this, VisualKeyActivity.class));
+            // insert 1/2 sec delay after last successful practice run
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // Do something after 1/2 sec delay
+                    goToVisualKeyActivity();
+                }
+            }, 500);
         }
 
         numDrops = 0;
         visualCipherKey = "";
+    }
+
+    private void goToVisualKeyActivity(){
+        startActivity(new Intent(this, VisualKeyActivity.class));
     }
 
     private void addBorder(){
@@ -464,7 +468,6 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
         popup.showAtLocation(layout, Gravity.NO_GRAVITY,0,170);
 
         // Getting a reference to Close button, and close the popup when clicked.
-        //todo the submit button on the popup has a transparency that makes the button hard to see?
         Button close = (Button) layout.findViewById(R.id.close);
         close.setOnClickListener(new View.OnClickListener() {
 
