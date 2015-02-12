@@ -12,7 +12,7 @@ public class PasswordDataVOComparator implements Comparator<PasswordDataVO> {
 
 
     public int compare(PasswordDataVO left, PasswordDataVO right) {
-        return left.getTitle().compareTo(right.getTitle());
+        return left.getTitle().toLowerCase().compareTo(right.getTitle().toLowerCase());
     }
 
 }
