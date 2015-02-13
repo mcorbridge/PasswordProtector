@@ -20,18 +20,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sound"
+                android:text="@string/settings_sound"
                 android:gravity="center"
-                android:textSize="24dp"/>
+                android:textSize="24sp"/>
             <Space
                 android:layout_width="150dp"
                 android:layout_height="match_parent" />
             <ToggleButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New ToggleButton"
                 android:id="@+id/toggleButtonSound"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:onClick="doSoundClick"/>
         </LinearLayout>
 
@@ -44,19 +43,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sound"
+                android:text="@string/settings_sync"
                 android:gravity="center"
-                android:textSize="24dp"/>
+                android:textSize="24sp"/>
             <Space
-                android:layout_width="150dp"
+                android:layout_width="100dp"
                 android:layout_height="match_parent" />
-            <ToggleButton
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New ToggleButton"
-                android:id="@+id/toggleButtonSound1"
-                android:layout_gravity="right"
-                android:onClick="doSoundClick"/>
+                android:id="@+id/buttonSync"
+                android:text="Sync"
+                android:layout_gravity="end"
+                android:onClick="doSyncClick"/>
         </LinearLayout>
 
         <LinearLayout
@@ -68,19 +67,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sound"
+                android:text="@string/settings_erase"
                 android:gravity="center"
-                android:textSize="24dp"/>
+                android:textSize="24sp"/>
             <Space
-                android:layout_width="150dp"
+                android:layout_width="94dp"
                 android:layout_height="match_parent" />
-            <ToggleButton
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New ToggleButton"
-                android:id="@+id/toggleButtonSound2"
-                android:layout_gravity="right"
-                android:onClick="doSoundClick"/>
+                android:id="@+id/buttonErase"
+                android:text="Erase"
+                android:layout_gravity="end"
+                android:onClick="doEmergencyEraseClick"/>
         </LinearLayout>
 
     </LinearLayout>

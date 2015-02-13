@@ -22,6 +22,7 @@ import android.widget.PopupWindow;
 
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
 import com.mcorbridge.passwordprotector.encryption.AESEncryption;
+import com.mcorbridge.passwordprotector.practice.PracticeActivity;
 import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
 import com.mcorbridge.passwordprotector.video.VideoActivity;
 
@@ -47,11 +48,11 @@ public class PassPhraseActivity extends BaseActivity {
 
         if(applicationModel.isDevMode()){
             EditText editTextQ = (EditText)findViewById(R.id.editTextQuestion);
-            editTextQ.setText(null); //this MUST be nulled before going live!!!!
+            editTextQ.setText("***");
             EditText editTextA = (EditText)findViewById(R.id.editTextAnswer);
-            editTextA.setText(null);//this MUST be nulled before going live!!!!
+            editTextA.setText("***");
             EditText email = (EditText)findViewById(R.id.editTextEmail);
-            email.setText(null);//this MUST be nulled before going live!!!!
+            email.setText("***");
         }
     }
 
@@ -111,7 +112,14 @@ public class PassPhraseActivity extends BaseActivity {
         setSharedPreferences(applicationModel.getSecretKey(), "secret_key");
         setSharedPreferences(applicationModel.getEmail(), "secret_email");
 
-        Intent intent = new Intent(this, VideoActivity.class);
+        Intent intent;
+
+        if(applicationModel.isDevMode()){
+            intent = new Intent(this, PracticeActivity.class);
+        }else{
+            intent = new Intent(this, VideoActivity.class);
+        }
+
         startActivity(intent);
     }
 

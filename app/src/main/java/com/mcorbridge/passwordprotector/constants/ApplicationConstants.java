@@ -12,6 +12,7 @@ public class ApplicationConstants {
     public static final String READ = "read";
     public static final String UPDATE = "update";
     public static final String DELETE = "delete";
+    public static final String DELETE_ALL = "deleteAll";
 
     public static final long MILLI_PER_EIGHT_HR = 8 * 60 * 60 * 1000;
 

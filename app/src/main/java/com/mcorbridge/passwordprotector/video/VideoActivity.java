@@ -58,6 +58,10 @@ public class VideoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
 
+        if(applicationModel.isDevMode()){
+            new Intent(this,PracticeActivity.class);
+        }
+
         textView = (TextView)findViewById(R.id.textView);
         textView.setText(titles[ndx]);
 

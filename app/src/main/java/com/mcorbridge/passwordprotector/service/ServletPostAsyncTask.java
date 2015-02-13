@@ -69,7 +69,7 @@ public class ServletPostAsyncTask extends AsyncTask<Pair<Context, String>, Void,
      * in the following if-else or it will not be included in the onPostExecute
      */
     protected void onPostExecute(final String result){
-        //Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+
         Activity main = (Activity)context;
 
         String className = main.getClass().getName();
@@ -78,7 +78,8 @@ public class ServletPostAsyncTask extends AsyncTask<Pair<Context, String>, Void,
             className.contains("ReadActivity")   ||
             className.contains("UpdateActivity") ||
             className.contains("DeleteActivity") ||
-            className.contains("PasswordDataActivity")){
+            className.contains("PasswordDataActivity") ||
+            className.contains("EmergencyDataEraseActivity")){
                 ((IPasswordActivity) main).processResults(result);
         }
     }

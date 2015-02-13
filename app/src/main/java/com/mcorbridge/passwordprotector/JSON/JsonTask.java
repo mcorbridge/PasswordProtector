@@ -1,5 +1,6 @@
 package com.mcorbridge.passwordprotector.JSON;
 
+import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
 import com.mcorbridge.passwordprotector.encryption.AESEncryption;
 import com.mcorbridge.passwordprotector.model.ApplicationModel;
 
@@ -80,6 +81,13 @@ public class JsonTask {
             json.put("id", createRndID());
         }
 
+        return json.toString();
+    }
+
+    public static String createDeleteAllJSON()throws Exception{
+        JSONObject json = new JSONObject();
+        json.put("name", applicationModel.getEmail());
+        json.put("action", ApplicationConstants.DELETE_ALL);
         return json.toString();
     }
 
