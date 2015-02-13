@@ -102,12 +102,10 @@ public class SettingsActivity extends BaseActivity {
                 .setIcon(R.drawable.alert_icon)
                 .setPositiveButton("Ok, got it", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
+                        goToMainActivity();
                     }
                 })
                 .show();
-
-        goToMainActivity();
     }
 
     public void doEmergencyEraseClick(View v){
