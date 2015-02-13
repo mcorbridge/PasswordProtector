@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ToggleButton;
 
 import com.mcorbridge.passwordprotector.BaseActivity;
@@ -25,6 +26,10 @@ public class SettingsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearLayoutMain);
+        View root = linearLayout.getRootView();
+        root.setBackgroundColor(getResources().getColor(android.R.color.white));
 
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
 
@@ -94,6 +99,11 @@ public class SettingsActivity extends BaseActivity {
     }
 
     public void doEmergencyEraseClick(View v){
+        //set activity background red
+        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearLayoutMain);
+        View root = linearLayout.getRootView();
+        root.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+
         new AlertDialog.Builder(this)
                 .setTitle("ALERT!")
                 .setMessage("IF YOU PRESS 'CONTINUE' ALL YOUR DATA WILL BE LOST FOREVER")
@@ -105,7 +115,9 @@ public class SettingsActivity extends BaseActivity {
                 })
                 .setNegativeButton("STOP", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // stub
+                        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearLayoutMain);
+                        View root = linearLayout.getRootView();
+                        root.setBackgroundColor(getResources().getColor(android.R.color.white));
                     }
                 })
                 .show();
@@ -132,7 +144,9 @@ public class SettingsActivity extends BaseActivity {
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // stub
+                        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearLayoutMain);
+                        View root = linearLayout.getRootView();
+                        root.setBackgroundColor(getResources().getColor(android.R.color.white));
                     }
                 })
                 .show();
