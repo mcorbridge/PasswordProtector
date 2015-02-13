@@ -95,6 +95,18 @@ public class SettingsActivity extends BaseActivity {
     public void doSyncClick(View v){
         emergencyDataEraseActivity.eraseLocalMemoryStore();
         emergencyDataEraseActivity.eraseLocalDataStore();
+
+        new AlertDialog.Builder(this)
+                .setTitle("Alert")
+                .setMessage("You will be prompted to signIn again.\n\nUpon correct sign in, your cloud data will be copied onto your device.")
+                .setIcon(R.drawable.alert_icon)
+                .setPositiveButton("Ok, got it", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .show();
+
         goToMainActivity();
     }
 
