@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,6 +46,7 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
     private ProgressBar progressBar;
     private PasswordsDataSource passwordsDataSource;
     private boolean isDecipherError;
+    CountDownTimer dataFetchTimeOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +61,8 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
         // for offline data work
         passwordsDataSource = new PasswordsDataSource(getApplicationContext());
         progressBar = (ProgressBar)findViewById(R.id.loadSpinner);
-        progressBar.setVisibility(View.VISIBLE);
+
+        spinnerStatus(true);
 
         try {
             doRead();
@@ -109,7 +112,7 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
         //if the read operation has already been performed, use the arrayList in memory
         if(applicationModel.getDecipheredPasswordDataVOs() != null){
             System.out.println("****************** read data from object in memory ********************");
-            progressBar.setVisibility(View.INVISIBLE);
+            spinnerStatus(false);
 
             //DON'T show the items that have a DELETE flag !!!!!!
             ArrayList<PasswordDataVO> dataWithDeleteRemoved = excludeDeletedData(applicationModel.getDecipheredPasswordDataVOs());
@@ -199,7 +202,7 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
      */
     public void processResults(String results){
         System.out.println("processResults --> " + results);
-        progressBar.setVisibility(View.INVISIBLE);
+        spinnerStatus(false);
         Gson gson = new Gson();
         final PasswordDataVO[] passwordDataVOs = gson.fromJson(results, PasswordDataVO[].class);
 
@@ -355,5 +358,59 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
     public void showTimeoutWarning(){
         Toast.makeText(getApplicationContext(), "The application will timeout in 1 minute",
                 Toast.LENGTH_LONG).show();
+    }
+
+    private void spinnerStatus(boolean isVisible){
+        if(isVisible){
+            progressBar.setVisibility(View.VISIBLE);
+            startStopDataRetrieveTimer("start");
+        }else{
+            progressBar.setVisibility(View.INVISIBLE);
+            startStopDataRetrieveTimer("cancel");
+        }
+    }
+
+    /**
+     * if the data request takes longer than 10 seconds, and this can happen if the Google App Engine has not been used in awhile,
+     * then don't leave the user holding the bag watching the spinner
+     */
+    private void progressBarTimeOut(){
+        Long millisInFuture = new Long(1000 * 10); // 10 second timeout
+        Long countDownInterval = new Long(1000);
+        dataFetchTimeOut = new CountDownTimer(millisInFuture,countDownInterval) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                System.out.println("tick");
+            }
+            @Override
+            public void onFinish() {
+                progressBar.setVisibility(View.INVISIBLE);
+                showTimeOutAlert();
+            }
+        };
+    }
+
+    private void startStopDataRetrieveTimer(String status){
+        if(status.equals("start")){
+            progressBarTimeOut();
+            dataFetchTimeOut.start();
+        }else if(status.equals("cancel")){
+            dataFetchTimeOut.cancel();
+            dataFetchTimeOut = null;
+        }
+    }
+
+
+    private void showTimeOutAlert(){
+        new AlertDialog.Builder(this)
+                .setTitle("Alert")
+                .setMessage("Your request for data timed out.\n\nSometimes it can take longer than expected.\n\nSign out and try again.")
+                .setIcon(R.drawable.alert_icon)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        signOut();
+                    }
+                })
+                .show();
     }
 }
