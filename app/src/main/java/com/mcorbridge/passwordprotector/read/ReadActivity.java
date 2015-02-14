@@ -164,7 +164,8 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
     }
 
     private void readFromLocalDatabase(){
-        progressBar.setVisibility(View.INVISIBLE);
+        spinnerStatus(false);
+
         passwordsDataSource.open();
         List<Password> passwords = passwordsDataSource.getAllPasswords();
         passwordsDataSource.close();
