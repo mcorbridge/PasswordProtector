@@ -18,7 +18,8 @@ import com.mcorbridge.passwordprotector.MainActivity;
 import com.mcorbridge.passwordprotector.PasswordDataActivity;
 import com.mcorbridge.passwordprotector.R;
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
-import com.mcorbridge.passwordprotector.encryption.AESEncryption;
+
+import com.mcorbridge.passwordprotector.encryption.AESUtil;
 import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
 import com.mcorbridge.passwordprotector.read.ReadActivity;
 import com.mcorbridge.passwordprotector.service.ServletPostAsyncTask;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 public class CreateActivity extends BaseActivity implements IPasswordActivity{
 
     private PasswordsDataSource passwordsDataSource;
+    private AESUtil aesUtil = new AESUtil();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,9 +148,9 @@ public class CreateActivity extends BaseActivity implements IPasswordActivity{
         passwordsDataSource.open();
         String cipher = applicationModel.getCipher();
         String action = ApplicationConstants.CREATE; // the action is not encrypted
-        category = AESEncryption.cipher(cipher,category);
-        title = AESEncryption.cipher(cipher,title);
-        value = AESEncryption.cipher(cipher,value);
+        category = aesUtil.encrypt(cipher,category);
+        title = aesUtil.encrypt(cipher,title);
+        value = aesUtil.encrypt(cipher,value);
         String name = applicationModel.getEmail();
         int isModified = modified; // I changed this from boolean to int. Why? I made a booboo  - but decided to stick with int in the end
         passwordsDataSource.createPassword(id,action,category,isModified,name,title,value);

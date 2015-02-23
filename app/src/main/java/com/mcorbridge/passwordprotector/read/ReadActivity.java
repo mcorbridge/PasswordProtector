@@ -26,7 +26,7 @@ import com.mcorbridge.passwordprotector.VisualKeyActivity;
 import com.mcorbridge.passwordprotector.adapters.CustomAdapter;
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
 import com.mcorbridge.passwordprotector.create.CreateActivity;
-import com.mcorbridge.passwordprotector.encryption.AESEncryption;
+import com.mcorbridge.passwordprotector.encryption.AESUtil;
 import com.mcorbridge.passwordprotector.error.DecipherErrorActivity;
 import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
 import com.mcorbridge.passwordprotector.service.ServletPostAsyncTask;
@@ -47,6 +47,7 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
     private PasswordsDataSource passwordsDataSource;
     private boolean isDecipherError;
     CountDownTimer dataFetchTimeOut;
+    private AESUtil aesUtil = new AESUtil();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +109,8 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
 
     private void doRead() throws Exception{
         String jsonRequest = JsonTask.readJSON();
+
+        System.out.println("---> " + jsonRequest);
 
         //if the read operation has already been performed, use the arrayList in memory
         if(applicationModel.getDecipheredPasswordDataVOs() != null){
@@ -299,12 +302,15 @@ public class ReadActivity extends BaseActivity implements IPasswordActivity{
 
     private ArrayList<PasswordDataVO> doDecipherResult(PasswordDataVO[] passwordDataVOs){
         ArrayList<PasswordDataVO> decipheredPasswordDataVOs = new ArrayList<>();
+
+        System.out.println("cipher ---> " + applicationModel.getCipher());
+
         try {
             for(int n=0; n<passwordDataVOs.length; n++){
                 PasswordDataVO passwordDataVO = passwordDataVOs[n];
-                passwordDataVO.setCategory(AESEncryption.decipher(applicationModel.getCipher(),passwordDataVO.getCategory()));
-                passwordDataVO.setTitle(AESEncryption.decipher(applicationModel.getCipher(), passwordDataVO.getTitle()));
-                passwordDataVO.setValue(AESEncryption.decipher(applicationModel.getCipher(), passwordDataVO.getValue()));
+                passwordDataVO.setCategory(aesUtil.decrypt(applicationModel.getCipher(),passwordDataVO.getCategory()));
+                passwordDataVO.setTitle(aesUtil.decrypt(applicationModel.getCipher(), passwordDataVO.getTitle()));
+                passwordDataVO.setValue(aesUtil.decrypt(applicationModel.getCipher(), passwordDataVO.getValue()));
 
                 decipheredPasswordDataVOs.add(passwordDataVO);
             }

@@ -21,7 +21,7 @@ import com.mcorbridge.passwordprotector.MainActivity;
 import com.mcorbridge.passwordprotector.PasswordDataActivity;
 import com.mcorbridge.passwordprotector.R;
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
-import com.mcorbridge.passwordprotector.encryption.AESEncryption;
+import com.mcorbridge.passwordprotector.encryption.AESUtil;
 import com.mcorbridge.passwordprotector.interfaces.IPasswordActivity;
 import com.mcorbridge.passwordprotector.read.ReadActivity;
 import com.mcorbridge.passwordprotector.service.ServletPostAsyncTask;
@@ -42,6 +42,7 @@ public class UpdateActivity extends BaseActivity implements IPasswordActivity{
     Button buttonModify;
     Button buttonDelete;
     private PasswordsDataSource passwordsDataSource;
+    private AESUtil aesUtil = new AESUtil();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -306,9 +307,9 @@ public class UpdateActivity extends BaseActivity implements IPasswordActivity{
         Password password = new Password();
         String cipher = applicationModel.getCipher();
         password.setAction(action);
-        password.setCategory(AESEncryption.cipher(cipher, category));
-        password.setTitle(AESEncryption.cipher(cipher, title));
-        password.setValue(AESEncryption.cipher(cipher, value));
+        password.setCategory(aesUtil.encrypt(cipher, category));
+        password.setTitle(aesUtil.encrypt(cipher, title));
+        password.setValue(aesUtil.encrypt(cipher, value));
         password.setPswdID(id);
         password.setModified(modified);
         passwordsDataSource.updatePassword(password);

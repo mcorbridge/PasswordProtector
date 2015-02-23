@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mcorbridge.passwordprotector.JSON.JsonTask;
+import com.mcorbridge.passwordprotector.encryption.AESUtil;
 import com.mcorbridge.passwordprotector.sql.Password;
 import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
 
@@ -82,6 +83,15 @@ public class TestActivity extends BaseActivity {
         editor.putString("lockout_time", null);  // Saving string
         editor.apply(); // commit changes
         applicationModel.setIncorrectDecipherAttempts(0);
+    }
+
+    public void testAES(View v){
+        System.out.println("**************************** test new AES algorithm ****************************");
+        AESUtil aesUtil = new AESUtil();
+        String cipherText = aesUtil.encrypt("passphrase","test text");
+        System.out.println("cipherText ---> " + cipherText);
+        String plaintext = aesUtil.decrypt("passphrase",cipherText);
+        System.out.println("plaintext ---> " + plaintext);
     }
 
 }

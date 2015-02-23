@@ -21,7 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
-import com.mcorbridge.passwordprotector.encryption.AESEncryption;
+import com.mcorbridge.passwordprotector.encryption.AESUtil;
 import com.mcorbridge.passwordprotector.practice.PracticeActivity;
 import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
 import com.mcorbridge.passwordprotector.video.VideoActivity;
@@ -37,6 +37,7 @@ public class PassPhraseActivity extends BaseActivity {
     private String answer;
     private String email;
     private PasswordsDataSource passwordsDataSource;
+    private AESUtil aesUtil = new AESUtil();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,11 +95,11 @@ public class PassPhraseActivity extends BaseActivity {
         }
 
         // email
-        applicationModel.setEmail(AESEncryption.cipher(ApplicationConstants.APPLICATION_SECRET_KEY, email));
+        applicationModel.setEmail(email);
 
         // question and answer
         String concat = question.concat(answer);
-        String cipher = AESEncryption.cipher(ApplicationConstants.APPLICATION_SECRET_KEY, concat);
+        String cipher = aesUtil.encrypt(ApplicationConstants.APPLICATION_SECRET_KEY, concat);
 
         // create secret key
         String reverse = new StringBuilder(cipher).reverse().toString();

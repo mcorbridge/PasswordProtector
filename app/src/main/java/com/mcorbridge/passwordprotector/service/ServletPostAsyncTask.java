@@ -35,8 +35,8 @@ public class ServletPostAsyncTask extends AsyncTask<Pair<Context, String>, Void,
 
         HttpClient httpClient = new DefaultHttpClient();
 
-        //String servletEndpoint = "http://192.168.0.10:8080/hello";
-        String servletEndpoint = "http://plasma-circle-815.appspot.com/hello";
+        String servletEndpoint = "http://192.168.0.10:8080/hello";
+        //String servletEndpoint = "http://plasma-circle-815.appspot.com/hello";
 
         // allows view to show which endpoint client currently using
         alertServletEndpoint(servletEndpoint.equals("http://192.168.0.10:8080/hello")? "dev" : "prod" );

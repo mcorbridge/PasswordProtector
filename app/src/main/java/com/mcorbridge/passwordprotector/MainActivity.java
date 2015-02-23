@@ -159,7 +159,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        menu.getItem(ApplicationConstants.MENU_ITEM_TEST).setVisible(false);
+        menu.getItem(ApplicationConstants.MENU_ITEM_TEST).setVisible(true);
         menu.getItem(ApplicationConstants.MENU_ITEM_HOME).setVisible(false);
         menu.getItem(ApplicationConstants.MENU_ITEM_CREATE).setVisible(false);
         menu.getItem(ApplicationConstants.MENU_ITEM_READ).setVisible(false);
