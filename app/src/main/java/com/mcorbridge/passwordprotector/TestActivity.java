@@ -7,9 +7,10 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mcorbridge.passwordprotector.JSON.JsonTask;
-import com.mcorbridge.passwordprotector.encryption.AESUtil;
 import com.mcorbridge.passwordprotector.sql.Password;
 import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
+
+import org.apache.commons.codec.binary.Base64;
 
 import java.util.List;
 
@@ -87,11 +88,11 @@ public class TestActivity extends BaseActivity {
 
     public void testAES(View v){
         System.out.println("**************************** test new AES algorithm ****************************");
-        AESUtil aesUtil = new AESUtil();
-        String cipherText = aesUtil.encrypt("passphrase","test text");
-        System.out.println("cipherText ---> " + cipherText);
-        String plaintext = aesUtil.decrypt("passphrase",cipherText);
-        System.out.println("plaintext ---> " + plaintext);
+        byte[] encodedBytes = Base64.encodeBase64("bostonBruins".getBytes());
+        System.out.println("encodedBytes " + new String(encodedBytes));
+        byte[] decodedBytes = Base64.decodeBase64(encodedBytes);
+        System.out.println("decodedBytes " + new String(decodedBytes));
+
     }
 
 }

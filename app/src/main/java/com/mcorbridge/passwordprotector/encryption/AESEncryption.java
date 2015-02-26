@@ -66,7 +66,7 @@ public class AESEncryption {
 
 // Helper methods
 
-    private static byte[] toByte(String hexString) {
+    public static byte[] toByte(String hexString) {
         int len = hexString.length()/2;
 
         byte[] result = new byte[len];

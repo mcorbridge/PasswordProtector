@@ -6,8 +6,6 @@ package com.mcorbridge.passwordprotector.constants;
  */
 public class ApplicationConstants {
 
-    public static final String APPLICATION_SECRET_KEY = "bostonBruins";
-
     public static final String CREATE = "create";
     public static final String READ = "read";
     public static final String UPDATE = "update";

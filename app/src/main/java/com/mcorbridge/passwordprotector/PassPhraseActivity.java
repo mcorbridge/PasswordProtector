@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -20,10 +19,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
-import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
-import com.mcorbridge.passwordprotector.encryption.AESUtil;
 import com.mcorbridge.passwordprotector.practice.PracticeActivity;
-import com.mcorbridge.passwordprotector.sql.PasswordsDataSource;
 import com.mcorbridge.passwordprotector.video.VideoActivity;
 
 import java.util.regex.Matcher;
@@ -36,16 +32,11 @@ public class PassPhraseActivity extends BaseActivity {
     private String question;
     private String answer;
     private String email;
-    private PasswordsDataSource passwordsDataSource;
-    private AESUtil aesUtil = new AESUtil();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pass_phrase);
-
-        // for offline data work
-        passwordsDataSource = new PasswordsDataSource(getApplicationContext());
 
         if(applicationModel.isDevMode()){
             EditText editTextQ = (EditText)findViewById(R.id.editTextQuestion);
@@ -56,8 +47,6 @@ public class PassPhraseActivity extends BaseActivity {
             email.setText("***");
         }
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -82,7 +71,6 @@ public class PassPhraseActivity extends BaseActivity {
 
 
     public void doSubmit(View v) throws Exception{
-
         EditText editTextQ = (EditText)findViewById(R.id.editTextQuestion);
         question = editTextQ.getText().toString().toLowerCase().replaceAll("\\s", "");
         EditText editTextA = (EditText)findViewById(R.id.editTextAnswer);
@@ -98,20 +86,10 @@ public class PassPhraseActivity extends BaseActivity {
         applicationModel.setEmail(email);
 
         // question and answer
-        String concat = question.concat(answer);
-        String cipher = aesUtil.encrypt(ApplicationConstants.APPLICATION_SECRET_KEY, concat);
+        String secretQuestionAnswer = question.concat(answer);
+        applicationModel.setSecretKey(secretQuestionAnswer);
 
-        // create secret key
-        String reverse = new StringBuilder(cipher).reverse().toString();
-        String slice1 = reverse.substring(0,3);
-        String slice2 = reverse.substring(reverse.length()/2,(reverse.length()/2)+3);
-        String slice3 = reverse.substring(reverse.length()-3,reverse.length());
-        String secretKey = slice1.concat(slice2).concat(slice3);
-        applicationModel.setSecretKey(secretKey);
-
-        //persist these encrypted values to the shared preferences
-        setSharedPreferences(applicationModel.getSecretKey(), "secret_key");
-        setSharedPreferences(applicationModel.getEmail(), "secret_email");
+        System.out.println("secretKey ---> " + applicationModel.getSecretKey());
 
         Intent intent;
 
@@ -123,13 +101,6 @@ public class PassPhraseActivity extends BaseActivity {
 
         startActivity(intent);
     }
-
-    public void setSharedPreferences(String key, String type){
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString(type, key);  // Saving string
-        editor.apply(); // commit changes
-    }
-
 
     private boolean doValidation(){
         int ndxValid = 0;
@@ -208,10 +179,9 @@ public class PassPhraseActivity extends BaseActivity {
         }
     }.start();
 
-    // validating email id
+    // email validation
     private boolean isValidEmail(String email) {
         String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-
         Pattern pattern = Pattern.compile(EMAIL_PATTERN);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();

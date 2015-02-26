@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
+import com.mcorbridge.passwordprotector.encryption.AESUtil;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ public class VisualKeyActivity extends BaseActivity implements OnTouchListener, 
     private RelativeLayout relativeLayout3;
     private RelativeLayout relativeLayout4;
     private HashMap hashMap = new HashMap();
+    private AESUtil aesUtil = new AESUtil();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,10 +239,11 @@ public class VisualKeyActivity extends BaseActivity implements OnTouchListener, 
             numDrops++;
             if(numDrops == 4){
                 applicationModel.setVisualCipherKey(visualCipherKey);
-                applicationModel.setCipher(applicationModel.getSecretKey().concat( applicationModel.getVisualCipherKey()));
-                //System.out.println("application email ---> " + applicationModel.getEmail());
-                //System.out.println("application cipher ---> " + applicationModel.getCipher());
-
+                System.out.println("visualCipherKey ---> " + visualCipherKey);
+                System.out.println("secretKey ---> " + applicationModel.getSecretKey());
+                System.out.println("email ---> " + applicationModel.getEmail());
+                applicationModel.setCipher(aesUtil.encrypt(visualCipherKey,visualCipherKey).concat(applicationModel.getSecretKey()));
+                System.out.println("cipher ---> " + applicationModel.getCipher());
                 Intent intent = new Intent(this, PasswordDataActivity.class);
                 startActivity(intent);
             }

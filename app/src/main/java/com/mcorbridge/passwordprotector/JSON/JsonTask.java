@@ -30,7 +30,7 @@ public class JsonTask {
         id = createRndID();
         JSONObject json = new JSONObject();
         json.put("value", aesUtil.encrypt(applicationModel.getCipher(),value));
-        json.put("name", aesUtil.encrypt(applicationModel.getCipher(),applicationModel.getEmail()));
+        json.put("name", applicationModel.getEmail());
         json.put("category", aesUtil.encrypt(applicationModel.getCipher(),category));
         json.put("title", aesUtil.encrypt(applicationModel.getCipher(),title));
         json.put("action", "create");
@@ -41,7 +41,7 @@ public class JsonTask {
     public static String updateJSON(String category, String title, String value, Long id) throws Exception{
         JSONObject json = new JSONObject();
         json.put("value", aesUtil.encrypt(applicationModel.getCipher(),value));
-        json.put("name", aesUtil.encrypt(applicationModel.getCipher(),applicationModel.getEmail()));
+        json.put("name", applicationModel.getEmail());
         json.put("category", aesUtil.encrypt(applicationModel.getCipher(),category));
         json.put("title", aesUtil.encrypt(applicationModel.getCipher(),title));
         json.put("action", "update");
@@ -52,7 +52,7 @@ public class JsonTask {
     public static String deleteJSON(String category, String title, String value, Long id) throws Exception{
         JSONObject json = new JSONObject();
         json.put("value", aesUtil.encrypt(applicationModel.getCipher(),value));
-        json.put("name", aesUtil.encrypt(applicationModel.getCipher(),applicationModel.getEmail()));
+        json.put("name", applicationModel.getEmail());
         json.put("category", aesUtil.encrypt(applicationModel.getCipher(),category));
         json.put("title", aesUtil.encrypt(applicationModel.getCipher(),title));
         json.put("action", "delete");
@@ -71,7 +71,7 @@ public class JsonTask {
     public static String createPreEncryptedJSON(String category, String title, String value, String action, long pswdID) throws Exception{
         JSONObject json = new JSONObject();
         json.put("value", value);
-        json.put("name", aesUtil.encrypt(applicationModel.getCipher(),applicationModel.getEmail()));
+        json.put("name", applicationModel.getEmail());
         json.put("category", category);
         json.put("title",title);
         json.put("action", action);
@@ -88,7 +88,7 @@ public class JsonTask {
 
     public static String createDeleteAllJSON()throws Exception{
         JSONObject json = new JSONObject();
-        json.put("name", aesUtil.encrypt(applicationModel.getCipher(),applicationModel.getEmail()));
+        json.put("name", applicationModel.getEmail());
         json.put("action", ApplicationConstants.DELETE_ALL);
         return json.toString();
     }
@@ -99,7 +99,7 @@ public class JsonTask {
      */
     public static String readJSON() throws Exception{
         JSONObject json = new JSONObject();
-        json.put("name", aesUtil.encrypt(applicationModel.getCipher(),applicationModel.getEmail()));
+        json.put("name", applicationModel.getEmail());
         json.put("action", "read");
         return json.toString();
     }

@@ -34,6 +34,7 @@ import com.mcorbridge.passwordprotector.MainActivity;
 import com.mcorbridge.passwordprotector.R;
 import com.mcorbridge.passwordprotector.VisualKeyActivity;
 import com.mcorbridge.passwordprotector.constants.ApplicationConstants;
+import com.mcorbridge.passwordprotector.encryption.AESUtil;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -364,6 +365,10 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
         // user has successfully completed 10 identical drops
         if(numPracticeAttempts == requiredPracticeAttempts){
             setSharedPreferences("true","completed_visual_key");
+
+            //encrypt the email and secretAnswerQuestion based on the visual key, and persist
+            persistClientInfo();
+
             // insert 1/2 sec delay after last successful practice run
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -378,6 +383,23 @@ public class PracticeActivity extends BaseActivity implements View.OnTouchListen
         numDrops = 0;
         visualCipherKey = "";
     }
+
+    private void persistClientInfo(){
+        AESUtil aesUtil = new AESUtil();
+
+        System.out.println("userVisualCipherKey ---> " + userVisualCipherKey);
+
+        String encryptedEmail = aesUtil.encrypt(userVisualCipherKey, applicationModel.getEmail());
+        String encryptedSecretQuestionAnswer = aesUtil.encrypt(userVisualCipherKey, applicationModel.getSecretKey());
+
+        setSharedPreferences(encryptedEmail, "secret_email");
+        setSharedPreferences(encryptedSecretQuestionAnswer, "secret_key");
+
+        applicationModel.setEmail(encryptedEmail);
+        applicationModel.setSecretKey(encryptedSecretQuestionAnswer);
+    }
+
+
 
     private void goToVisualKeyActivity(){
         startActivity(new Intent(this, VisualKeyActivity.class));
