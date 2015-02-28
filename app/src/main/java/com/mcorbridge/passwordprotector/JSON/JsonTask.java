@@ -28,33 +28,42 @@ public class JsonTask {
 
     public static String createJSON(String category, String title, String value) throws Exception{
         id = createRndID();
+
+        String cipher = applicationModel.getCipher();
+
         JSONObject json = new JSONObject();
-        json.put("value", aesUtil.encrypt(applicationModel.getCipher(),value));
+        json.put("value", aesUtil.encrypt(cipher,value));
         json.put("name", applicationModel.getEmail());
-        json.put("category", aesUtil.encrypt(applicationModel.getCipher(),category));
-        json.put("title", aesUtil.encrypt(applicationModel.getCipher(),title));
+        json.put("category", aesUtil.encrypt(cipher,category));
+        json.put("title", aesUtil.encrypt(cipher,title));
         json.put("action", "create");
         json.put("id", id);
         return json.toString();
     }
 
     public static String updateJSON(String category, String title, String value, Long id) throws Exception{
+
+        String cipher = applicationModel.getCipher();
+
         JSONObject json = new JSONObject();
-        json.put("value", aesUtil.encrypt(applicationModel.getCipher(),value));
+        json.put("value", aesUtil.encrypt(cipher,value));
         json.put("name", applicationModel.getEmail());
-        json.put("category", aesUtil.encrypt(applicationModel.getCipher(),category));
-        json.put("title", aesUtil.encrypt(applicationModel.getCipher(),title));
+        json.put("category", aesUtil.encrypt(cipher,category));
+        json.put("title", aesUtil.encrypt(cipher,title));
         json.put("action", "update");
         json.put("id", id);
         return json.toString();
     }
 
     public static String deleteJSON(String category, String title, String value, Long id) throws Exception{
+
+        String cipher = applicationModel.getCipher();
+
         JSONObject json = new JSONObject();
-        json.put("value", aesUtil.encrypt(applicationModel.getCipher(),value));
+        json.put("value", aesUtil.encrypt(cipher,value));
         json.put("name", applicationModel.getEmail());
-        json.put("category", aesUtil.encrypt(applicationModel.getCipher(),category));
-        json.put("title", aesUtil.encrypt(applicationModel.getCipher(),title));
+        json.put("category", aesUtil.encrypt(cipher,category));
+        json.put("title", aesUtil.encrypt(cipher,title));
         json.put("action", "delete");
         json.put("id", id);
         return json.toString();

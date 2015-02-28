@@ -242,6 +242,7 @@ public class VisualKeyActivity extends BaseActivity implements OnTouchListener, 
                 System.out.println("visualCipherKey ---> " + visualCipherKey);
                 System.out.println("secretKey ---> " + applicationModel.getSecretKey());
                 System.out.println("email ---> " + applicationModel.getEmail());
+                System.out.println("encrypted  visualCipherKey---> " + aesUtil.encrypt(visualCipherKey,visualCipherKey));
                 applicationModel.setCipher(aesUtil.encrypt(visualCipherKey,visualCipherKey).concat(applicationModel.getSecretKey()));
                 System.out.println("cipher ---> " + applicationModel.getCipher());
                 Intent intent = new Intent(this, PasswordDataActivity.class);
