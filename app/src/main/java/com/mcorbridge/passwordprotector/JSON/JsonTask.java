@@ -6,6 +6,7 @@ import com.mcorbridge.passwordprotector.model.ApplicationModel;
 
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -38,7 +39,8 @@ public class JsonTask {
         json.put("title", aesUtil.encrypt(cipher,title));
         json.put("action", "create");
         json.put("id", id);
-        return json.toString();
+        String[] jsonArray = {json.toString()};
+        return Arrays.toString(jsonArray);
     }
 
     public static String updateJSON(String category, String title, String value, Long id) throws Exception{
@@ -52,7 +54,8 @@ public class JsonTask {
         json.put("title", aesUtil.encrypt(cipher,title));
         json.put("action", "update");
         json.put("id", id);
-        return json.toString();
+        String[] jsonArray = {json.toString()};
+        return Arrays.toString(jsonArray);
     }
 
     public static String deleteJSON(String category, String title, String value, Long id) throws Exception{
@@ -66,7 +69,8 @@ public class JsonTask {
         json.put("title", aesUtil.encrypt(cipher,title));
         json.put("action", "delete");
         json.put("id", id);
-        return json.toString();
+        String[] jsonArray = {json.toString()};
+        return Arrays.toString(jsonArray);
     }
 
     /**
@@ -92,14 +96,16 @@ public class JsonTask {
             json.put("id", createRndID());
         }
 
-        return json.toString();
+        String[] jsonArray = {json.toString()};
+        return Arrays.toString(jsonArray);
     }
 
     public static String createDeleteAllJSON()throws Exception{
         JSONObject json = new JSONObject();
         json.put("name", applicationModel.getEmail());
         json.put("action", ApplicationConstants.DELETE_ALL);
-        return json.toString();
+        String[] jsonArray = {json.toString()};
+        return Arrays.toString(jsonArray);
     }
 
     /**
@@ -110,7 +116,8 @@ public class JsonTask {
         JSONObject json = new JSONObject();
         json.put("name", applicationModel.getEmail());
         json.put("action", "read");
-        return json.toString();
+        String[] jsonArray = {json.toString()};
+        return Arrays.toString(jsonArray);
     }
 
 
